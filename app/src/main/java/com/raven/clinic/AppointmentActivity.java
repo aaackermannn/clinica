@@ -13,7 +13,7 @@ import java.util.Calendar;
 
 public class AppointmentActivity extends AppCompatActivity {
 
-    private TextView tvSelectedDate;
+    private TextView tvSelectedDateTime; // Переименовано
     private Calendar selectedDateTime;
     private String doctorName, doctorSpecialty;
 
@@ -31,11 +31,11 @@ public class AppointmentActivity extends AppCompatActivity {
         tvDoctorName.setText(doctorName);
         tvSpecialty.setText(doctorSpecialty);
 
-        tvSelectedDate = findViewById(R.id.tvSelectedDate);
+        tvSelectedDateTime = findViewById(R.id.tvSelectedDateTime); // Исправленный ID
         selectedDateTime = Calendar.getInstance();
 
-        Button btnSelectDate = findViewById(R.id.btnSelectDate);
-        btnSelectDate.setOnClickListener(v -> showDateTimePicker());
+        Button btnSelectDateTime = findViewById(R.id.btnSelectDateTime); // Исправленный ID
+        btnSelectDateTime.setOnClickListener(v -> showDateTimePicker());
 
         Button btnBook = findViewById(R.id.btnBook);
         btnBook.setOnClickListener(v -> confirmAppointment());
@@ -45,11 +45,11 @@ public class AppointmentActivity extends AppCompatActivity {
         Calendar now = Calendar.getInstance();
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (DatePicker view, int year, int month, int dayOfMonth) -> {
+                (DatePicker dateView, int year, int month, int dayOfMonth) -> { // Переименовано view
                     selectedDateTime.set(year, month, dayOfMonth);
 
                     TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                            (TimePicker view, int hourOfDay, int minute) -> {
+                            (TimePicker timeView, int hourOfDay, int minute) -> { // Переименовано view
                                 selectedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 selectedDateTime.set(Calendar.MINUTE, minute);
                                 updateSelectedDateTime();
@@ -67,12 +67,12 @@ public class AppointmentActivity extends AppCompatActivity {
 
     private void updateSelectedDateTime() {
         String dateTime = android.text.format.DateFormat.format("dd MMMM yyyy, HH:mm", selectedDateTime).toString();
-        tvSelectedDate.setText(dateTime);
+        tvSelectedDateTime.setText(dateTime);
     }
 
     private void confirmAppointment() {
-        if (tvSelectedDate.getText().toString().isEmpty()) {
-            tvSelectedDate.setError("Выберите дату и время");
+        if (tvSelectedDateTime.getText().toString().isEmpty()) {
+            tvSelectedDateTime.setError("Выберите дату и время");
             return;
         }
 

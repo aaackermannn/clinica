@@ -95,8 +95,10 @@ public class DoctorsActivity extends AppCompatActivity {
             Doctor doctor = doctors.get(position);
             holder.tvDoctorName.setText(doctor.name);
             holder.tvSpecialty.setText(doctor.specialty);
-            holder.tvRating.setText(String.valueOf(doctor.rating));
-            holder.tvReviews.setText("(" + doctor.reviews + " отзывов)");
+
+            // Если в макете есть элементы для рейтинга и отзывов, раскомментируйте:
+            // holder.tvRating.setText(String.valueOf(doctor.rating));
+            // holder.tvReviews.setText("(" + doctor.reviews + " отзывов)");
 
             holder.btnBook.setOnClickListener(v -> {
                 Intent intent = new Intent(DoctorsActivity.this, AppointmentActivity.class);
@@ -119,8 +121,6 @@ public class DoctorsActivity extends AppCompatActivity {
                 super(itemView);
                 tvDoctorName = itemView.findViewById(R.id.tvDoctorName);
                 tvSpecialty = itemView.findViewById(R.id.tvSpecialty);
-                tvRating = itemView.findViewById(R.id.tvRating);
-                tvReviews = itemView.findViewById(R.id.tvReviews);
                 btnBook = itemView.findViewById(R.id.btnBook);
             }
         }
