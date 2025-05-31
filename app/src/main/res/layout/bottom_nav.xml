@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:elevation="8dp">
+
+    <Button
+        android:id="@+id/nav_home"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Домой"
+        android:drawableTop="@drawable/ic_home"
+        style="@style/NavButtonStyle"/>
+
+    <Button
+        android:id="@+id/nav_add"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Запись"
+        android:drawableTop="@drawable/ic_add"
+        style="@style/NavButtonStyle"/>
+
+    <Button
+        android:id="@+id/nav_profile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Профиль"
+        android:drawableTop="@drawable/ic_profile"
+        style="@style/NavButtonStyle"/>
+</LinearLayout>

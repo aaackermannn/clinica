@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="9:41"
+        android:textSize="24sp"
+        android:textColor="@color/gray"
+        android:layout_gravity="end"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Med hub"
+        android:textSize="36sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginBottom="40dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Спасибо!"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ваша запись была успешно подтверждена"
+        android:textSize="18sp"
+        android:textColor="@color/dark_gray"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Информация о враче -->
+    <TextView
+        android:id="@+id/tvDoctorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Доктор Шон Мерфи"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tvSpecialty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Хирург"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Информация о записи -->
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Дата: 26 Марта, 2025"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Время: 16:00"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Локация: Клиника MedHub"
+        android:textSize="16sp"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Цена: $95"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Кнопки -->
+    <Button
+        android:id="@+id/btnBackToHub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Вернуться в хаб"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/primary"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/btnCancelBooking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Отменить бронь"
+        android:textColor="@color/primary"
+        android:backgroundTint="@color/transparent"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"/>
+
+</LinearLayout>
