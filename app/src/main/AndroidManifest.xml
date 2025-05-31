@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.raven.clinic">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Med Hub"
+        android:theme="@style/Theme.MedHub">
+
+        <activity android:name=".LoginActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".DoctorsActivity" />
+        <activity android:name=".AppointmentActivity" />
+        <activity android:name=".ConfirmationActivity" />
+        <activity android:name=".MyAppointmentsActivity" />
+        <activity android:name=".ProfileActivity" />
+
+    </application>
+
+</manifest>
