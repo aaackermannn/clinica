@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="search_hint">К примеру "Спортивный врач"</string>
+    <string name="greeting">Здравствуйте, Имя!</string>
+    <string name="default_location">Москва, Россия</string>
+    <string name="my_appointments">Ваши записи</string>
+    <string name="all_doctors">Все врачи</string>
+    <string name="next_appointment">Ближайшая запись:</string>
+    <string name="default_doctor">Доктор Шон Мерфи</string>
+    <string name="default_specialty">Хирург</string>
+    <string name="default_appointment_date">23 Марта, 16:00</string>
 </resources>

@@ -11,21 +11,27 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
         <EditText
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="К примеру \"сердце\""
+            android:layout_height="48dp"
+        android:minHeight="48dp"
+        android:inputType="text"
+        android:autofillHints="search"
+        android:hint="@string/search_hint"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="8dp"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@drawable/edittext_background"/>
 
         <!-- RecyclerView для врачей -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvDoctors"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="16dp"/>
     </LinearLayout>
 
