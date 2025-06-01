@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+        <!-- LoginActivity – точка входа -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -16,21 +17,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SignUpActivity"
-            android:parentActivityName=".LoginActivity">
-            <!-- если нужна обратная совместимость: -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginActivity" />
-        </activity>
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".DoctorsActivity" />
-        <activity android:name=".AppointmentActivity" />
-        <activity android:name=".ConfirmationActivity" />
-        <activity android:name=".MyAppointmentsActivity" />
-        <activity android:name=".ProfileActivity" />
+            android:exported="false" />
+
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DoctorsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AppointmentActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ConfirmationActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MyAppointmentsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
 
     </application>
-
 </manifest>
+

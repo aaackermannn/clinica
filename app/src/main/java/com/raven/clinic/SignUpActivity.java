@@ -4,50 +4,52 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText etFullName, etEmail, etPassword;
+    private EditText editTextSignUpEmail;
+    private EditText editTextSignUpPassword;
+    private Button buttonSignUpMedID;
+    private TextView textViewGoToLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        ImageButton btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> finish());
+        editTextSignUpEmail = findViewById(R.id.editTextSignUpEmail);
+        editTextSignUpPassword = findViewById(R.id.editTextSignUpPassword);
+        buttonSignUpMedID = findViewById(R.id.buttonSignUpMedID);
+        textViewGoToLogin = findViewById(R.id.textViewGoToLogin);
 
-        etFullName = findViewById(R.id.etFullName);
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-        Button btnSignUp = findViewById(R.id.btnSignUp);
+        buttonSignUpMedID.setOnClickListener(v -> {
+            String email = editTextSignUpEmail.getText().toString().trim();
+            String password = editTextSignUpPassword.getText().toString().trim();
 
-        btnSignUp.setOnClickListener(v -> {
-            String fullName = etFullName.getText().toString().trim();
-            String email = etEmail.getText().toString().trim();
-            String password = etPassword.getText().toString().trim();
-
-            if (fullName.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                etEmail.setError("Неверный формат электронной почты");
-                return;
-            }
-            if (password.length() < 6) {
-                etPassword.setError("Пароль должен быть не короче 6 символов");
+                editTextSignUpEmail.setError("Неверный формат email");
                 return;
             }
 
-            // TODO: Здесь логика регистрации (сохранение данных)
-            startActivity(new Intent(this, HomeActivity.class));
+            startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
+            finish();
+        });
+
+        textViewGoToLogin.setOnClickListener(v -> {
+            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             finish();
         });
     }
 }
+
+
 
 

@@ -1,67 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/homeRoot"
     android:orientation="vertical"
+    android:background="@color/dark_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_bg">
+    android:padding="16dp">
 
-    <!-- Основной контент (растягивается) -->
-    <ScrollView
-        android:id="@+id/scrollContainer"
+    <!-- 1) Поле "Поиск врачей" (поддерживает русский ввод) -->
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Поиск врачей"
+        android:inputType="textCapSentences"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawableTint="@color/light_gray"
+        android:padding="12dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/light_gray"
+        android:background="@drawable/rounded_edittext"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 2) Кнопка "Мои записи" -->
+    <LinearLayout
+        android:id="@+id/buttonMyAppointments"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edittext"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_agenda"
+            android:tint="@color/light_gray"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Мои записи"
+            android:textSize="16sp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <!-- 3) Список врачей (RecyclerView) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDoctors"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true"
-        android:padding="16dp">
+        android:clipToPadding="false"
+        android:paddingBottom="8dp" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!-- Поле поиска -->
-            <EditText
-                android:id="@+id/etSearch"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Поиск врача"
-                android:inputType="text"
-                android:imeOptions="actionSearch"
-                android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="8dp"
-                android:padding="12dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/gray"
-                android:background="@drawable/edittext_background"
-                android:layout_marginBottom="24dp"/>
-
-            <!-- Заголовок «Все врачи» -->
-            <TextView
-                android:id="@+id/tvDoctorsHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Все врачи"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- Список врачей (RecyclerView) -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvDoctors"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Нижнее меню навигации -->
-    <include
-        android:id="@+id/bottom_navigation"
-        layout="@layout/bottom_nav"
+    <!-- 4) Bottom Navigation View без "+" -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="56dp"
+        android:background="@android:color/white"
+        app:itemIconTint="@color/bottom_nav_icon_tint"
+        app:itemTextColor="@color/bottom_nav_text_color"
+        app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
+
+
+
+
+
+
+
 
 

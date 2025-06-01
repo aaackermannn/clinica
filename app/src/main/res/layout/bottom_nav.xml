@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="@color/light_gray"
+    android:background="@color/white"
     android:gravity="center">
 
-    <!-- Домой -->
+    <!-- «Домой» -->
     <LinearLayout
         android:id="@+id/nav_home"
         android:orientation="vertical"
@@ -15,22 +16,24 @@
         android:layout_weight="1"
         android:gravity="center"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_home"
-            android:tint="@color/white"/>
+            android:tint="@color/bottom_nav_icon_tint" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Домой"
             android:textSize="12sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/bottom_nav_text_color" />
     </LinearLayout>
 
-    <!-- Запись (добавить) -->
+    <!-- «Запись» -->
     <LinearLayout
         android:id="@+id/nav_add"
         android:orientation="vertical"
@@ -39,22 +42,24 @@
         android:layout_weight="1"
         android:gravity="center"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_add"
-            android:tint="@color/white"/>
+            android:tint="@color/bottom_nav_icon_tint" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Запись"
             android:textSize="12sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/bottom_nav_text_color" />
     </LinearLayout>
 
-    <!-- Профиль -->
+    <!-- «Профиль» -->
     <LinearLayout
         android:id="@+id/nav_profile"
         android:orientation="vertical"
@@ -63,19 +68,23 @@
         android:layout_weight="1"
         android:gravity="center"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_profile"
-            android:tint="@color/white"/>
+            android:tint="@color/bottom_nav_icon_tint" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Профиль"
             android:textSize="12sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/bottom_nav_text_color" />
     </LinearLayout>
 
 </LinearLayout>
+
+

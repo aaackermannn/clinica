@@ -3,55 +3,77 @@ package com.raven.clinic;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class ConfirmationActivity extends AppCompatActivity {
+
+    private ImageView imgConfirmDoctorPhoto;
+    private TextView tvDoctorName, tvSpecialty, tvDate, tvTime;
+    private Button btnBackToHub, btnCancelBooking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
 
-        // Получаем данные из Intent
-        String doctorName = getIntent().getStringExtra("doctor_name");
-        String doctorSpecialty = getIntent().getStringExtra("doctor_specialty");
-        long dateTimeMillis = getIntent().getLongExtra("date_time", 0);
+        // 1) Получаем переданные данные
+        Intent intent = getIntent();
+        String doctorName = intent.getStringExtra("doctor_name");
+        String doctorSpecialty = intent.getStringExtra("doctor_specialty");
+        String doctorPhoto = intent.getStringExtra("doctor_photo");
+        String dateTime = intent.getStringExtra("date_time");
 
-        // Форматируем дату и время
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String dateStr = dateFormat.format(new Date(dateTimeMillis));
-        String timeStr = timeFormat.format(new Date(dateTimeMillis));
+        // 2) Находим View
+        imgConfirmDoctorPhoto = findViewById(R.id.imgConfirmDoctorPhoto);
+        tvDoctorName = findViewById(R.id.tvDoctorName);
+        tvSpecialty = findViewById(R.id.tvSpecialty);
+        tvDate = findViewById(R.id.tvDate);
+        tvTime = findViewById(R.id.tvTime);
+        btnBackToHub = findViewById(R.id.btnBackToHub);
+        btnCancelBooking = findViewById(R.id.btnCancelBooking);
 
-        // Удостоверяемся, что в activity_confirmation.xml есть именно такие IDs
-        TextView tvDoctorName = findViewById(R.id.tvDoctorName);
-        TextView tvSpecialty = findViewById(R.id.tvSpecialty);
-        TextView tvDate = findViewById(R.id.tvDate);
-        TextView tvTime = findViewById(R.id.tvTime);
+        // Устанавливаем фото врача
+        int resId = getResources().getIdentifier(
+                doctorPhoto.replace(".png", ""),
+                "drawable",
+                getPackageName()
+        );
+        if (resId != 0) {
+            imgConfirmDoctorPhoto.setImageResource(resId);
+        } else {
+            imgConfirmDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
+        }
 
-        // Заполняем UI
+        // Устанавливаем текстовые поля
         tvDoctorName.setText(doctorName);
         tvSpecialty.setText(doctorSpecialty);
-        tvDate.setText("Дата: " + dateStr);
-        tvTime.setText("Время: " + timeStr);
 
-        Button btnBackToHub = findViewById(R.id.btnBackToHub);
-        Button btnCancelBooking = findViewById(R.id.btnCancelBooking);
+        // Парсим dateTime на дату и время
+        // Формат: "25 июня 2025, 10:00"
+        if (dateTime.contains(",")) {
+            String[] parts = dateTime.split(",");
+            tvDate.setText("Дата: " + parts[0].trim());
+            tvTime.setText("Время: " + parts[1].trim());
+        } else {
+            tvDate.setText("Дата/Время: " + dateTime);
+            tvTime.setText("");
+        }
 
+        // Кнопка «На главный экран»
         btnBackToHub.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
+            startActivity(new Intent(ConfirmationActivity.this, HomeActivity.class));
+            finishAffinity();
         });
 
+        // Кнопка «Отменить запись»
         btnCancelBooking.setOnClickListener(v -> {
-            // Просто закрываем экран, возвращаясь на предыдущий
-            finish();
+            finish(); // просто закрываем экран
         });
     }
 }
+
 
 
