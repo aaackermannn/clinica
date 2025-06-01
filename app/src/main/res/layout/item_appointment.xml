@@ -1,61 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="12dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
-    android:background="@color/light_gray">
+    android:background="@drawable/rounded_edittext"
+    android:layout_marginBottom="8dp"
+    android:gravity="center_vertical">
 
+    <!-- Фото врача -->
+    <ImageView
+        android:id="@+id/imgDoctorPhoto"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/rounded_edittext" />
+
+    <!-- Вертикальный блок: имя, специальность, дата/время -->
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="12dp">
+        android:layout_weight="1">
 
-        <!-- Имя врача -->
         <TextView
             android:id="@+id/tvDoctorName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Доктор Иванов"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_marginBottom="4dp"/>
+            android:text="Имя Доктора"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-        <!-- Специальность -->
         <TextView
             android:id="@+id/tvSpecialty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Кардиолог"
+            android:text="Специальность"
             android:textSize="14sp"
             android:textColor="@color/gray"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="4dp" />
 
-        <!-- Дата и время -->
         <TextView
             android:id="@+id/tvDateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="15 июня 2025, 14:30"
+            android:text="25 июня 2025, 10:00"
             android:textSize="14sp"
-            android:textColor="@color/white"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Кнопка «Отменить» -->
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="Отменить"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:backgroundTint="@color/primary"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"/>
+            android:textColor="@color/gray"
+            android:layout_marginTop="4dp" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+    <!-- Кнопка «Отменить» -->
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Отменить"
+        android:textColor="@color/white"
+        android:background="@drawable/rounded_button"
+        android:paddingHorizontal="12dp" />
+</LinearLayout>

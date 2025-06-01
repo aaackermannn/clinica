@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,16 +40,14 @@ public class HomeActivity extends AppCompatActivity {
         rvDoctors = findViewById(R.id.rvDoctors);
         rvDoctors.setLayoutManager(new LinearLayoutManager(this));
 
-        allDoctors = getSampleDoctors();
+        allDoctors = getSampleDoctors(); // теперь четыре новых врача
         adapter = new DoctorsAdapter(new ArrayList<>(allDoctors));
         rvDoctors.setAdapter(adapter);
 
         // Фильтрация при вводе текста
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // не используем
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -56,13 +55,15 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                // не используем
-            }
+            public void afterTextChanged(Editable s) { }
         });
 
-        // 4) BottomNav
-        setupBottomNavigation();
+        // 4) BottomNav (в меню уже нет nav_add)
+        findViewById(R.id.nav_home).setOnClickListener(v -> { /* Уже здесь */ });
+        findViewById(R.id.nav_profile).setOnClickListener(v -> {
+            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+            finish();
+        });
     }
 
     private void filterDoctors(String query) {
@@ -77,34 +78,22 @@ public class HomeActivity extends AppCompatActivity {
         adapter.updateList(filtered);
     }
 
-    private void setupBottomNavigation() {
-        findViewById(R.id.nav_home).setOnClickListener(v -> {
-            // Уже здесь
-        });
-        findViewById(R.id.nav_profile).setOnClickListener(v -> {
-            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
-            finish();
-        });
-    }
-
     private List<Doctor> getSampleDoctors() {
         List<Doctor> doctors = new ArrayList<>();
-        doctors.add(new Doctor("Доктор Шон Мерфи", "Хирург", 4.9, 123, "shon.png"));
-        doctors.add(new Doctor("Антонио Бандерас", "Кардиолог", 4.8, 95, "banderas.png"));
-        doctors.add(new Doctor("Георгий Рубинский", "Стилист", 4.9, 87, "rubinskiy.png"));
-        doctors.add(new Doctor("Юрий Каплан", "Кардиолог", 5.0, 64, "kaplan.png"));
-        doctors.add(new Doctor("Мирон Федоров", "Логопед", 5.0, 42, "fedorov.png"));
-        doctors.add(new Doctor("Скала", "Уролог", 5.0, 101, "skala.png"));
+        doctors.add(new Doctor("Billi Ailish", "Педиатр", 4.9, 123, "billie"));
+        doctors.add(new Doctor("Anthony", "Спортивный врач", 4.8, 95, "anthony"));
+        doctors.add(new Doctor("Мирон Федоров", "Детский логопед", 4.9, 87, "miron"));
+        doctors.add(new Doctor("Скала", "Уролог", 5.0, 64, "skala"));
         return doctors;
     }
 
-    // Класс «Doctor» с полем photoName
+    // Класс «Doctor» с полем photoName (имя файла из drawable без расширения)
     private static class Doctor {
         String name;
         String specialty;
         double rating;
         int reviews;
-        String photoName; // имя файла в drawable, без расширения
+        String photoName;
 
         public Doctor(String name, String specialty, double rating, int reviews, String photoName) {
             this.name = name;
@@ -115,7 +104,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // Адаптер со стопроцентной поддержкой фото и клика «Записаться»
     private class DoctorsAdapter extends RecyclerView.Adapter<DoctorsAdapter.DoctorViewHolder> {
         private List<Doctor> doctors;
 
@@ -136,9 +124,9 @@ public class HomeActivity extends AppCompatActivity {
             holder.tvDoctorName.setText(doctor.name);
             holder.tvSpecialty.setText(doctor.specialty);
 
-            // Загрузим фото врача из ресурсов по имени
+            // Загружаем фото врача из ресурсов по имени
             int resId = getResources().getIdentifier(
-                    doctor.photoName.replace(".png",""),
+                    doctor.photoName,
                     "drawable",
                     getPackageName()
             );
@@ -152,7 +140,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(HomeActivity.this, AppointmentActivity.class);
                 intent.putExtra("doctor_name", doctor.name);
                 intent.putExtra("doctor_specialty", doctor.specialty);
-                intent.putExtra("doctor_photo", doctor.photoName);
+                intent.putExtra("doctor_photo", doctor.photoName + ".png");
                 startActivity(intent);
             });
         }
@@ -182,5 +170,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 }
+
 
 

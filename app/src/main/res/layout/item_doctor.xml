@@ -14,7 +14,6 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/doctor_placeholder"
         android:layout_marginEnd="12dp"
         android:background="@drawable/rounded_edittext" />
 
@@ -24,24 +23,24 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <!-- Имя -->
+        <!-- Имя (тёмный текст) -->
         <TextView
             android:id="@+id/tvDoctorName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Имя Доктора"
             android:textSize="18sp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <!-- Специальность -->
+        <!-- Специальность (серый текст) -->
         <TextView
             android:id="@+id/tvSpecialty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Специальность"
             android:textSize="14sp"
-            android:textColor="@color/light_gray"
+            android:textColor="@color/gray"
             android:layout_marginTop="4dp" />
     </LinearLayout>
 
@@ -55,4 +54,5 @@
         android:background="@drawable/rounded_button"
         android:paddingHorizontal="12dp" />
 </LinearLayout>
+
 

@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <style name="NavButtonStyle">
-            <item name="android:background">@null</item>
-            <item name="android:textSize">12sp</item>
-            <item name="android:textColor">@color/primary</item>
-            <item name="android:drawablePadding">4dp</item>
-            <item name="android:padding">8dp</item>
-        </style>
+
+    <!-- Базовая тёмная тема с оранжевыми акцентами -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Цвет тулбара -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/primary</item>
+        <!-- По умолчанию фон приложений: тёмный -->
+        <item name="android:windowBackground">@color/dark_bg</item>
+        <!-- Стили для кнопок и текста -->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:buttonStyle">@style/MyButtonStyle</item>
+        <item name="android:editTextStyle">@style/MyEditTextStyle</item>
+    </style>
+
+    <!-- Кастомный стиль для Button: оранжевый фон, белый текст, округлые углы -->
+    <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Кастомный стиль для EditText: тёмный фон, светло‑серый текст‑хинт, белый ввод -->
+    <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/rounded_edittext</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/light_gray</item>
+    </style>
+
 </resources>
+

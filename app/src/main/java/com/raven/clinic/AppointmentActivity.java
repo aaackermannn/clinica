@@ -54,26 +54,36 @@ public class AppointmentActivity extends AppCompatActivity {
             imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
         }
 
-        // 4) Варианты выбора даты/времени уже заданы в макете (rbOption1, rbOption2, rbOption3)
-        // Если нужно поменять тексты программно, можно сделать так:
+        // 4) Варианты выбора даты/времени (меняем текст в зависимости от врача)
         RadioButton rb1 = findViewById(R.id.rbOption1);
         RadioButton rb2 = findViewById(R.id.rbOption2);
         RadioButton rb3 = findViewById(R.id.rbOption3);
 
-        // Чтобы сделать уникальные варианты для каждого врача, можно сверять doctorName:
-        if (doctorName.equals("Доктор Шон Мерфи")) {
-            rb1.setText("30 июня 2025, 09:00");
-            rb2.setText("01 июля 2025, 11:30");
-            rb3.setText("03 июля 2025, 15:00");
-        }
-        else if (doctorName.equals("Антонио Бандерас")) {
-            rb1.setText("28 июня 2025, 10:00");
-            rb2.setText("29 июня 2025, 14:45");
-            rb3.setText("02 июля 2025, 16:00");
-        }
-        // и так далее для остальных врачей...
-        else {
-            // по умолчанию оставляются тексты из XML
+        // Задаём уникальные варианты для каждого врача
+        switch (doctorName) {
+            case "Billi Ailish":
+                rb1.setText("30 июня 2025, 09:00");
+                rb2.setText("01 июля 2025, 11:30");
+                rb3.setText("03 июля 2025, 15:00");
+                break;
+            case "Anthony":
+                rb1.setText("28 июня 2025, 10:00");
+                rb2.setText("29 июня 2025, 14:45");
+                rb3.setText("02 июля 2025, 16:00");
+                break;
+            case "Мирон Федоров":
+                rb1.setText("27 июня 2025, 10:15");
+                rb2.setText("29 июня 2025, 12:00");
+                rb3.setText("04 июля 2025, 14:00");
+                break;
+            case "Скала":
+                rb1.setText("26 июня 2025, 09:30");
+                rb2.setText("28 июня 2025, 11:00");
+                rb3.setText("30 июня 2025, 13:45");
+                break;
+            default:
+                // Если вдруг имя непривычное – оставить дефолтные тексты из XML
+                break;
         }
 
         // 5) Обработка кнопки «Записаться»
@@ -86,7 +96,13 @@ public class AppointmentActivity extends AppCompatActivity {
             RadioButton selectedRb = findViewById(selectedId);
             String dateTime = selectedRb.getText().toString();
 
-            // Переходим на ConfirmationActivity, передаём дату/время
+            // Добавляем запись в AppointmentManager
+            AppointmentManager.Appointment appt = new AppointmentManager.Appointment(
+                    doctorName, doctorSpecialty, dateTime, doctorPhoto
+            );
+            AppointmentManager.getInstance().addAppointment(appt);
+
+            // Переходим на ConfirmationActivity, передаём дату/время и фото
             Intent confirmIntent = new Intent(AppointmentActivity.this, ConfirmationActivity.class);
             confirmIntent.putExtra("doctor_name", doctorName);
             confirmIntent.putExtra("doctor_specialty", doctorSpecialty);
@@ -97,6 +113,7 @@ public class AppointmentActivity extends AppCompatActivity {
         });
     }
 }
+
 
 
 

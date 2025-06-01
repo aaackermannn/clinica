@@ -2,7 +2,6 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,38 +13,46 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+
 
 public class MyAppointmentsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewAppointments;
+    private TextView tvEmptyState;
     private AppointmentsAdapter adapter;
+    private List<AppointmentManager.Appointment> appointmentsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_appointments);
+        setupBottomNavigation();
 
-        // Находим RecyclerView по новому id
         recyclerViewAppointments = findViewById(R.id.recyclerViewAppointments);
-        recyclerViewAppointments.setLayoutManager(new LinearLayoutManager(this));
+        tvEmptyState = findViewById(R.id.tvEmptyState);
 
-        List<Appointment> appointments = getSampleAppointments();
-        adapter = new AppointmentsAdapter(appointments);
-        recyclerViewAppointments.setAdapter(adapter);
+        // Получаем список из AppointmentManager
+        appointmentsList = AppointmentManager.getInstance().getAppointments();
 
-        // BottomNav
+        if (appointmentsList.isEmpty()) {
+            // Если нет активных записей
+            tvEmptyState.setVisibility(View.VISIBLE);
+            recyclerViewAppointments.setVisibility(View.GONE);
+        } else {
+            // Показываем список
+            tvEmptyState.setVisibility(View.GONE);
+            recyclerViewAppointments.setVisibility(View.VISIBLE);
+
+            recyclerViewAppointments.setLayoutManager(new LinearLayoutManager(this));
+            adapter = new AppointmentsAdapter(appointmentsList);
+            recyclerViewAppointments.setAdapter(adapter);
+        }
+    }
+
+    private void setupBottomNavigation() {
         findViewById(R.id.nav_home).setOnClickListener(v -> {
             startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        findViewById(R.id.nav_add).setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class)); // или DoctorsActivity
             finish();
         });
 
@@ -55,56 +62,54 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         });
     }
 
-    private List<Appointment> getSampleAppointments() {
-        List<Appointment> appointments = new ArrayList<>();
-        appointments.add(new Appointment("Доктор Шон Мерфи", "Хирург", System.currentTimeMillis() + 86400000));
-        appointments.add(new Appointment("Антонио Бандерас", "Кардиолог", System.currentTimeMillis() + 172800000));
-        return appointments;
-    }
-
-    private static class Appointment {
-        String doctorName;
-        String specialty;
-        long dateTime;
-
-        public Appointment(String doctorName, String specialty, long dateTime) {
-            this.doctorName = doctorName;
-            this.specialty = specialty;
-            this.dateTime = dateTime;
-        }
-    }
-
+    // Адаптер для списка записей
     private class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
 
-        private final List<Appointment> appointments;
+        private final List<AppointmentManager.Appointment> appointments;
 
-        public AppointmentsAdapter(List<Appointment> appointments) {
+        public AppointmentsAdapter(List<AppointmentManager.Appointment> appointments) {
             this.appointments = appointments;
         }
 
         @NonNull
         @Override
         public AppointmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_appointment, parent, false);
+            View view = getLayoutInflater().inflate(R.layout.item_appointment, parent, false);
             return new AppointmentViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull AppointmentViewHolder holder, int position) {
-            Appointment appointment = appointments.get(position);
+            AppointmentManager.Appointment appt = appointments.get(position);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
-            String dateTime = sdf.format(new Date(appointment.dateTime));
+            // Загружаем фото врача
+            int resId = getResources().getIdentifier(
+                    appt.photoName.replace(".png", ""),
+                    "drawable",
+                    getPackageName()
+            );
+            if (resId != 0) {
+                holder.imgDoctorPhoto.setImageResource(resId);
+            } else {
+                holder.imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
+            }
 
-            holder.tvDoctorName.setText(appointment.doctorName);
-            holder.tvSpecialty.setText(appointment.specialty);
-            holder.tvDateTime.setText(dateTime);
+            holder.tvDoctorName.setText(appt.doctorName);
+            holder.tvSpecialty.setText(appt.specialty);
+            holder.tvDateTime.setText(appt.dateTime);
 
             holder.btnCancel.setOnClickListener(v -> {
+                // Удаляем запись из менеджера и из списка
+                AppointmentManager.getInstance().getAppointments().remove(position);
                 appointments.remove(position);
                 notifyItemRemoved(position);
                 Toast.makeText(MyAppointmentsActivity.this, "Запись отменена", Toast.LENGTH_SHORT).show();
+
+                if (appointments.isEmpty()) {
+                    // Если после удаления список пуст, показываем сообщение
+                    tvEmptyState.setVisibility(View.VISIBLE);
+                    recyclerViewAppointments.setVisibility(View.GONE);
+                }
             });
         }
 
@@ -113,12 +118,14 @@ public class MyAppointmentsActivity extends AppCompatActivity {
             return appointments.size();
         }
 
-        public class AppointmentViewHolder extends RecyclerView.ViewHolder {
+        class AppointmentViewHolder extends RecyclerView.ViewHolder {
+            android.widget.ImageView imgDoctorPhoto;
             TextView tvDoctorName, tvSpecialty, tvDateTime;
             Button btnCancel;
 
             public AppointmentViewHolder(@NonNull View itemView) {
                 super(itemView);
+                imgDoctorPhoto = itemView.findViewById(R.id.imgDoctorPhoto);
                 tvDoctorName = itemView.findViewById(R.id.tvDoctorName);
                 tvSpecialty = itemView.findViewById(R.id.tvSpecialty);
                 tvDateTime = itemView.findViewById(R.id.tvDateTime);
@@ -127,5 +134,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         }
     }
 }
+
+
 
 

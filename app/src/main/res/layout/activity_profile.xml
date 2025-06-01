@@ -2,78 +2,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/dark_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_bg">
+    android:padding="16dp">
 
-    <!-- Основной контент (растягивается) -->
-    <ScrollView
-        android:id="@+id/scrollContainer"
+    <!-- Пример содержимого профиля (имя/емейл и кнопка logout) -->
+    <TextView
+        android:id="@+id/tvFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Иван Иванов"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ivan@example.com"
+        android:textSize="16sp"
+        android:textColor="@color/light_gray"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btnLogout"         <!-- <-- Обязательно должно быть именно это id -->
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:text="Выйти"
+    android:textColor="@color/white"
+    android:background="@drawable/rounded_button"
+    android:layout_marginBottom="32dp" />
+
+    <!-- Bottom Navigation без "+" (повторно используем меню без nav_add) -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
-
-            <!-- Убрана попытка подключить несуществующий ic_profile_placeholder -->
-            <!-- Если нужен аватар, добавьте свой drawable и замените @drawable/ic_profile_placeholder на существующий -->
-            <ImageView
-                android:id="@+id/ivAvatar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:contentDescription="Аватар"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="16dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/edittext_background"
-                android:padding="8dp"/>
-
-            <!-- ФИО -->
-            <TextView
-                android:id="@+id/tvFullName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Иван Иванов"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginBottom="4dp" />
-
-            <!-- Email -->
-            <TextView
-                android:id="@+id/tvEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ivan@example.com"
-                android:textSize="16sp"
-                android:textColor="@color/gray"
-                android:layout_marginBottom="24dp" />
-
-            <!-- Кнопка «Выйти» -->
-            <Button
-                android:id="@+id/btnLogout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="Выйти"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:backgroundTint="@color/primary"
-                android:padding="12dp"
-                android:layout_marginBottom="32dp"/>
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Нижнее меню навигации -->
-    <include
-        android:id="@+id/bottom_navigation"
-        layout="@layout/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="56dp"
+        android:background="@android:color/white"
+        app:itemIconTint="@color/bottom_nav_icon_tint"
+        app:itemTextColor="@color/bottom_nav_text_color"
+        app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
+
 
