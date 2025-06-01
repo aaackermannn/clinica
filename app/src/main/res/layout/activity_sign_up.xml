@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_bg">
@@ -8,28 +9,31 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingTop="48dp"
+        android:paddingBottom="16dp">
 
-        <!-- Логотип MedHub -->
+        <!-- Логотип MedHub (точно на том же месте, что и на экране входа) -->
         <ImageView
             android:id="@+id/imgLogoSignUp"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:src="@drawable/medhub_logo"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:contentDescription="Логотип MedHub" />
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="Логотип MedHub"
+            android:layout_marginBottom="32dp" />
 
         <!-- Электронная почта -->
         <EditText
             android:id="@+id/editTextSignUpEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:hint="Электронная почта"
             android:inputType="textEmailAddress"
+            android:background="@drawable/rounded_edittext"
             android:textColor="@color/white"
             android:textColorHint="@color/light_gray"
-            android:background="@drawable/rounded_edittext"
             android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
@@ -37,12 +41,12 @@
         <EditText
             android:id="@+id/editTextSignUpPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:hint="Пароль"
             android:inputType="textPassword"
+            android:background="@drawable/rounded_edittext"
             android:textColor="@color/white"
             android:textColorHint="@color/light_gray"
-            android:background="@drawable/rounded_edittext"
             android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
@@ -50,12 +54,12 @@
         <EditText
             android:id="@+id/editTextSignUpConfirmPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:hint="Подтвердите пароль"
             android:inputType="textPassword"
+            android:background="@drawable/rounded_edittext"
             android:textColor="@color/white"
             android:textColorHint="@color/light_gray"
-            android:background="@drawable/rounded_edittext"
             android:padding="12dp"
             android:layout_marginBottom="24dp" />
 
@@ -67,7 +71,7 @@
             android:text="Зарегистрироваться"
             android:background="@drawable/rounded_button"
             android:textColor="@color/white"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="16dp" />
 
         <!-- Ссылка «Уже есть аккаунт? Войти» -->
         <TextView
@@ -76,9 +80,11 @@
             android:layout_height="wrap_content"
             android:text="Уже есть аккаунт? Войти"
             android:textColor="@color/primary"
-            android:layout_marginTop="16dp" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp" />
     </LinearLayout>
 </ScrollView>
+
 
 
 

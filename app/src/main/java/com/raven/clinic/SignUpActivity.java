@@ -11,8 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText editTextSignUpEmail;
-    private EditText editTextSignUpPassword;
+    private EditText editTextEmail, editTextPassword, editTextConfirmPassword;
     private Button buttonSignUpMedID;
     private TextView textViewGoToLogin;
 
@@ -21,24 +20,34 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        editTextSignUpEmail = findViewById(R.id.editTextSignUpEmail);
-        editTextSignUpPassword = findViewById(R.id.editTextSignUpPassword);
-        buttonSignUpMedID = findViewById(R.id.buttonSignUpMedID);
-        textViewGoToLogin = findViewById(R.id.textViewGoToLogin);
+        editTextEmail           = findViewById(R.id.editTextSignUpEmail);
+        editTextPassword        = findViewById(R.id.editTextSignUpPassword);
+        editTextConfirmPassword = findViewById(R.id.editTextSignUpConfirmPassword);
+        buttonSignUpMedID       = findViewById(R.id.buttonSignUpMedID);
+        textViewGoToLogin       = findViewById(R.id.textViewGoToLogin);
 
         buttonSignUpMedID.setOnClickListener(v -> {
-            String email = editTextSignUpEmail.getText().toString().trim();
-            String password = editTextSignUpPassword.getText().toString().trim();
+            String email    = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+            String confirm  = editTextConfirmPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
+            // Проверяем заполнение
+            if (email.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
                 Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // Проверяем формат email
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                editTextSignUpEmail.setError("Неверный формат email");
+                editTextEmail.setError("Неверный формат email");
+                return;
+            }
+            // Проверяем совпадение паролей
+            if (!password.equals(confirm)) {
+                editTextConfirmPassword.setError("Пароли не совпадают");
                 return;
             }
 
+            // Если всё ок, переходим на HomeActivity
             startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
             finish();
         });
@@ -49,6 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 }
+
 
 
 

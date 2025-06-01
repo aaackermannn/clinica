@@ -1,66 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_bg">
 
-    <!-- Логотип MedHub -->
-    <ImageView
-        android:id="@+id/imgLogoLogin"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/medhub_logo"
-        android:layout_marginBottom="24dp"
-        android:contentDescription="Логотип MedHub" />
-
-    <!-- Email -->
-    <EditText
-        android:id="@+id/editTextEmail"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Электронная почта"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/white"
-        android:textColorHint="@color/light_gray"
-        android:background="@drawable/rounded_edittext"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingTop="48dp"
+        android:paddingBottom="16dp">
 
-    <!-- Пароль -->
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Пароль"
-        android:inputType="textPassword"
-        android:textColor="@color/white"
-        android:textColorHint="@color/light_gray"
-        android:background="@drawable/rounded_edittext"
-        android:padding="12dp"
-        android:layout_marginBottom="24dp" />
+        <!-- Логотип MedHub (центрирован по ширине) -->
+        <ImageView
+            android:id="@+id/imgLogoLogin"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/medhub_logo"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="Логотип MedHub"
+            android:layout_marginBottom="32dp" />
 
-    <!-- Кнопка «Войти с MedID» -->
-    <Button
-        android:id="@+id/buttonLoginMedID"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Войти с MedID"
-        android:background="@drawable/rounded_button"
-        android:textColor="@color/white"
-        android:layout_marginBottom="8dp" />
+        <!-- Электронная почта -->
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Электронная почта"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/rounded_edittext"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
 
-    <!-- Ссылка «Нет аккаунта? Зарегистрируйтесь» -->
-    <TextView
-        android:id="@+id/textViewSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Нет аккаунта? Зарегистрируйтесь"
-        android:textColor="@color/primary"
-        android:layout_marginTop="16dp" />
-</LinearLayout>
+        <!-- Пароль -->
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Пароль"
+            android:inputType="textPassword"
+            android:background="@drawable/rounded_edittext"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Кнопка «Войти с MedID» -->
+        <Button
+            android:id="@+id/buttonLoginMedID"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Войти с MedID"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/white"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Ссылка «Нет аккаунта? Зарегистрируйтесь» -->
+        <TextView
+            android:id="@+id/textViewSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Нет аккаунта? Зарегистрируйтесь"
+            android:textColor="@color/primary"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</ScrollView>
+
 
 
 

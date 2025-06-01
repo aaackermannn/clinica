@@ -5,75 +5,84 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class ConfirmationActivity extends AppCompatActivity {
 
-    private ImageView imgConfirmDoctorPhoto;
-    private TextView tvDoctorName, tvSpecialty, tvDate, tvTime;
-    private Button btnBackToHub, btnCancelBooking;
+    private TextView tvConfirmationMessage;
+    private ImageView imgDoctorPhoto;
+    private TextView tvDoctorName, tvSpecialty, tvDateTime;
+    private Button btnCancelBooking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
 
-        // 1) Получаем переданные данные
+        // 1) Находим View по id
+        tvConfirmationMessage = findViewById(R.id.tvConfirmationMessage);
+        imgDoctorPhoto       = findViewById(R.id.imgConfirmedDoctorPhoto);
+        tvDoctorName         = findViewById(R.id.tvConfirmedDoctorName);
+        tvSpecialty          = findViewById(R.id.tvConfirmedSpecialty);
+        tvDateTime           = findViewById(R.id.tvConfirmedDateTime);
+        btnCancelBooking     = findViewById(R.id.btnCancelBooking);
+
+        // 2) Получаем данные из Intent
         Intent intent = getIntent();
-        String doctorName = intent.getStringExtra("doctor_name");
+        String doctorName      = intent.getStringExtra("doctor_name");
         String doctorSpecialty = intent.getStringExtra("doctor_specialty");
-        String doctorPhoto = intent.getStringExtra("doctor_photo");
-        String dateTime = intent.getStringExtra("date_time");
+        String doctorPhoto     = intent.getStringExtra("doctor_photo");
+        String dateTime        = intent.getStringExtra("date_time");
 
-        // 2) Находим View
-        imgConfirmDoctorPhoto = findViewById(R.id.imgConfirmDoctorPhoto);
-        tvDoctorName = findViewById(R.id.tvDoctorName);
-        tvSpecialty = findViewById(R.id.tvSpecialty);
-        tvDate = findViewById(R.id.tvDate);
-        tvTime = findViewById(R.id.tvTime);
-        btnBackToHub = findViewById(R.id.btnBackToHub);
-        btnCancelBooking = findViewById(R.id.btnCancelBooking);
+        // 3) Устанавливаем текст сообщения
+        tvConfirmationMessage.setText("Вы записаны к " + doctorName);
 
-        // Устанавливаем фото врача
+        // 4) Заполняем поля врача
+        tvDoctorName.setText(doctorName);
+        tvSpecialty.setText(doctorSpecialty);
+        tvDateTime.setText("Дата/время: " + dateTime);
+
         int resId = getResources().getIdentifier(
-                doctorPhoto.replace(".png", ""),
+                doctorPhoto.replace(".png",""),
                 "drawable",
                 getPackageName()
         );
         if (resId != 0) {
-            imgConfirmDoctorPhoto.setImageResource(resId);
+            imgDoctorPhoto.setImageResource(resId);
         } else {
-            imgConfirmDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
+            imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
         }
 
-        // Устанавливаем текстовые поля
-        tvDoctorName.setText(doctorName);
-        tvSpecialty.setText(doctorSpecialty);
-
-        // Парсим dateTime на дату и время
-        // Формат: "25 июня 2025, 10:00"
-        if (dateTime.contains(",")) {
-            String[] parts = dateTime.split(",");
-            tvDate.setText("Дата: " + parts[0].trim());
-            tvTime.setText("Время: " + parts[1].trim());
-        } else {
-            tvDate.setText("Дата/Время: " + dateTime);
-            tvTime.setText("");
-        }
-
-        // Кнопка «На главный экран»
-        btnBackToHub.setOnClickListener(v -> {
+        // 5) Обработка кнопки «Отменить запись»
+        btnCancelBooking.setOnClickListener(v -> {
+            Toast.makeText(this, "Запись отменена", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(ConfirmationActivity.this, HomeActivity.class));
-            finishAffinity();
+            finish();
         });
 
-        // Кнопка «Отменить запись»
-        btnCancelBooking.setOnClickListener(v -> {
-            finish(); // просто закрываем экран
+        // 6) BottomNavigationView
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(ConfirmationActivity.this, HomeActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_profile) {
+                startActivity(new Intent(ConfirmationActivity.this, ProfileActivity.class));
+                finish();
+                return true;
+            }
+            return false;
         });
     }
 }
+
+
 
 
 
