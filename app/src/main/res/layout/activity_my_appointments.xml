@@ -1,38 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/dark_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Контейнер для пустого состояния или списка (он тянется на всё свободное пространство) -->
-    <FrameLayout
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/tvMyAppointmentsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Мои записи"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp" />
+
+    <!-- Если записей нет, показываем этот TextView -->
+    <TextView
+        android:id="@+id/tvNoActiveAppointments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Активных записей нет"
+        android:textSize="16sp"
+        android:textColor="@color/light_gray"
+        android:gravity="center"
+        android:visibility="gone"
+        android:padding="16dp" />
+
+    <!-- RecyclerView для списка активных записей -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvActiveAppointments"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:clipToPadding="false" />
 
-        <!-- Текст, если записей нет -->
-        <TextView
-            android:id="@+id/tvEmptyState"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Активных записей нет"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:visibility="gone" />
+    <!-- Заполнитель перед BottomNav -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
 
-        <!-- RecyclerView для списка записей -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewAppointments"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-    </FrameLayout>
-
-    <!-- Bottom Navigation всегда внизу -->
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -42,6 +57,7 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
 
 
 

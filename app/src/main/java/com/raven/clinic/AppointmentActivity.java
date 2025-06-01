@@ -2,7 +2,6 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -10,10 +9,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppointmentActivity extends AppCompatActivity {
 
@@ -24,13 +27,13 @@ public class AppointmentActivity extends AppCompatActivity {
     private Button btnConfirm;
 
     private String doctorName, doctorSpecialty, doctorPhoto;
+    private String skipDateTime; // Если переходим с ManageAppointment, то этот слот нужно скрыть
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
 
-        // 1) Инициализация View
         btnBack = findViewById(R.id.btnBack);
         imgDoctorPhoto = findViewById(R.id.imgAppointmentDoctorPhoto);
         tvDoctorName = findViewById(R.id.tvDoctorName);
@@ -38,13 +41,14 @@ public class AppointmentActivity extends AppCompatActivity {
         rgDateTimeOptions = findViewById(R.id.rgDateTimeOptions);
         btnConfirm = findViewById(R.id.btnConfirm);
 
-        // 2) Получаем данные о враче из Intent
+        // Получаем данные из Intent
         Intent intent = getIntent();
-        doctorName = intent.getStringExtra("doctor_name");
+        doctorName      = intent.getStringExtra("doctor_name");
         doctorSpecialty = intent.getStringExtra("doctor_specialty");
-        doctorPhoto = intent.getStringExtra("doctor_photo"); // например "billie.png"
+        doctorPhoto     = intent.getStringExtra("doctor_photo");
+        skipDateTime    = intent.getStringExtra("skip_date_time"); // может быть null
 
-        // Устанавливаем текст и фото врача
+        // Заполняем текст и фото врача
         tvDoctorName.setText(doctorName);
         tvSpecialty.setText(doctorSpecialty);
         int resId = getResources().getIdentifier(
@@ -58,63 +62,62 @@ public class AppointmentActivity extends AppCompatActivity {
             imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
         }
 
-        // 3) Настраиваем варианты радиокнопок в зависимости от врача
-        RadioButton rb1 = findViewById(R.id.rbOption1);
-        RadioButton rb2 = findViewById(R.id.rbOption2);
-        RadioButton rb3 = findViewById(R.id.rbOption3);
-        switch (doctorName) {
-            case "Billi Ailish":
-                rb1.setText("30 июня 2025, 09:00");
-                rb2.setText("01 июля 2025, 11:30");
-                rb3.setText("03 июля 2025, 15:00");
-                break;
-            case "Anthony":
-                rb1.setText("28 июня 2025, 10:00");
-                rb2.setText("29 июня 2025, 14:45");
-                rb3.setText("02 июля 2025, 16:00");
-                break;
-            case "Мирон Федоров":
-                rb1.setText("27 июня 2025, 10:15");
-                rb2.setText("29 июня 2025, 12:00");
-                rb3.setText("04 июля 2025, 14:00");
-                break;
-            case "Скала":
-                rb1.setText("26 июня 2025, 09:30");
-                rb2.setText("28 июня 2025, 11:00");
-                rb3.setText("30 июня 2025, 13:45");
-                break;
+        // Доступные варианты слотов (жёстко прописаны, но в будущем можно вытянуть из БД)
+        List<String> allSlots = new ArrayList<>();
+        allSlots.add("30 июня 2025, 09:00");
+        allSlots.add("01 июля 2025, 11:30");
+        allSlots.add("03 июля 2025, 15:00");
+
+        // Если skipDateTime != null, убираем эту опцию
+        if (skipDateTime != null) {
+            allSlots.remove(skipDateTime);
         }
 
-        // 4) Обработка кнопки Назад
+        // Теперь динамически заполняем радиокнопки
+        rgDateTimeOptions.removeAllViews();
+        for (String slot : allSlots) {
+            RadioButton rb = new RadioButton(this);
+            rb.setText(slot);
+            rb.setTextColor(getResources().getColor(R.color.white));
+            rb.setButtonTintList(getResources().getColorStateList(R.color.primary));
+            // Нужны отступы:
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            lp.setMargins(0, 0, 0, dpToPx(8));
+            rb.setLayoutParams(lp);
+            rgDateTimeOptions.addView(rb);
+        }
+
         btnBack.setOnClickListener(v -> finish());
 
-        // 5) Кнопка «Записаться»
         btnConfirm.setOnClickListener(v -> {
-            int selectedId = rgDateTimeOptions.getCheckedRadioButtonId();
-            if (selectedId == -1) {
+            int checkedId = rgDateTimeOptions.getCheckedRadioButtonId();
+            if (checkedId == -1) {
                 Toast.makeText(this, "Выберите дату и время", Toast.LENGTH_SHORT).show();
                 return;
             }
-            RadioButton selectedRb = findViewById(selectedId);
+            RadioButton selectedRb = findViewById(checkedId);
             String dateTime = selectedRb.getText().toString();
 
-            // Добавляем запись в одиночный менеджер
+            // Сохраняем новую запись
             AppointmentManager.Appointment appt = new AppointmentManager.Appointment(
                     doctorName, doctorSpecialty, dateTime, doctorPhoto
             );
-            AppointmentManager.getInstance().addAppointment(appt);
+            AppointmentManager.getInstance().addOrUpdateAppointment(appt);
 
             // Переходим на ConfirmationActivity
-            Intent confirmIntent = new Intent(AppointmentActivity.this, ConfirmationActivity.class);
-            confirmIntent.putExtra("doctor_name", doctorName);
-            confirmIntent.putExtra("doctor_specialty", doctorSpecialty);
-            confirmIntent.putExtra("doctor_photo", doctorPhoto);
-            confirmIntent.putExtra("date_time", dateTime);
-            startActivity(confirmIntent);
+            Intent i = new Intent(AppointmentActivity.this, ConfirmationActivity.class);
+            i.putExtra("doctor_name", doctorName);
+            i.putExtra("doctor_specialty", doctorSpecialty);
+            i.putExtra("doctor_photo", doctorPhoto);
+            i.putExtra("date_time", dateTime);
+            startActivity(i);
             finish();
         });
 
-        // 6) BottomNavigationView: Домой и Профиль
+        // BottomNav
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -130,7 +133,14 @@ public class AppointmentActivity extends AppCompatActivity {
             return false;
         });
     }
+
+    // Утилита для конвертации dp → px
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
 }
+
 
 
 

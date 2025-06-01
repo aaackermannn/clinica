@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/dark_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/tvManageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="У вас уже есть запись"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp" />
+
+    <!-- Фото врача -->
+    <ImageView
+        android:id="@+id/imgManageDoctorPhoto"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
+        android:src="@drawable/doctor_placeholder"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Имя врача -->
+    <TextView
+        android:id="@+id/tvManageDoctorName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Имя Доктора"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Действующая дата/время -->
+    <TextView
+        android:id="@+id/tvManageCurrentDateTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Текущий приём: 01 июля 2025, 11:30"
+        android:textSize="16sp"
+        android:textColor="@color/light_gray"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Кнопка «Перенести запись» -->
+    <Button
+        android:id="@+id/btnReschedule"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Перенести запись"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Кнопка «Отменить запись» -->
+    <Button
+        android:id="@+id/btnCancelExisting"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Отменить запись"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Заполнитель, чтобы BottomNav был внизу -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@android:color/white"
+        app:itemIconTint="@color/bottom_nav_icon_tint"
+        app:itemTextColor="@color/bottom_nav_text_color"
+        app:menu="@menu/bottom_nav_menu" />
+</LinearLayout>
+

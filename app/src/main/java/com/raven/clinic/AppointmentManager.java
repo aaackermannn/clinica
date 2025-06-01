@@ -3,46 +3,71 @@ package com.raven.clinic;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Singleton-класс для хранения списка активных записей пользователя.
- */
 public class AppointmentManager {
+
+    // Singleton
     private static AppointmentManager instance;
-    private final List<Appointment> appointments = new ArrayList<>();
 
-    private AppointmentManager() { }
-
-    public static synchronized AppointmentManager getInstance() {
+    public static AppointmentManager getInstance() {
         if (instance == null) {
             instance = new AppointmentManager();
         }
         return instance;
     }
 
-    public void addAppointment(Appointment appt) {
-        appointments.add(appt);
+    // Внутренний класс «Запись»
+    public static class Appointment {
+        public String doctorName;
+        public String specialty;
+        public String dateTime;
+        public String doctorPhoto; // имя файла с расширением
+
+        public Appointment(String name, String specialty, String dateTime, String photo) {
+            this.doctorName   = name;
+            this.specialty    = specialty;
+            this.dateTime     = dateTime;
+            this.doctorPhoto  = photo;
+        }
     }
 
-    public List<Appointment> getAppointments() {
+    // Список активных (неназначенных) записей
+    private final List<Appointment> appointments = new ArrayList<>();
+
+    private AppointmentManager() { }
+
+    // Возвращает список всех активных записей
+    public List<Appointment> getAllAppointments() {
+        // Возвращаем копию, чтобы внешний код не мог изменить напрямую
         return new ArrayList<>(appointments);
     }
 
-    public void clearAppointments() {
-        appointments.clear();
+    // Возвращает запись по врачу, или null, если нет
+    public Appointment getAppointmentForDoctor(String doctorName) {
+        for (Appointment a : appointments) {
+            if (a.doctorName.equals(doctorName)) {
+                return a;
+            }
+        }
+        return null;
     }
 
-    public static class Appointment {
-        public final String doctorName;
-        public final String specialty;
-        public final String dateTime;
-        public final String photoName;
+    // Добавляет или заменяет запись (если уже есть запись для этого врача)
+    public void addOrUpdateAppointment(Appointment appt) {
+        // Если уже есть, удаляем старую
+        Appointment existing = getAppointmentForDoctor(appt.doctorName);
+        if (existing != null) {
+            appointments.remove(existing);
+        }
+        appointments.add(appt);
+    }
 
-        public Appointment(String doctorName, String specialty, String dateTime, String photoName) {
-            this.doctorName = doctorName;
-            this.specialty = specialty;
-            this.dateTime = dateTime;
-            this.photoName = photoName;
+    // Удаляет запись для данного врача
+    public void removeAppointment(String doctorName) {
+        Appointment existing = getAppointmentForDoctor(doctorName);
+        if (existing != null) {
+            appointments.remove(existing);
         }
     }
 }
+
 

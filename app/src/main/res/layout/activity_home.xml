@@ -7,73 +7,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Обёртка контента с отступами сверху/сбоку -->
-    <LinearLayout
-        android:id="@+id/homeContent"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="16dp">
+    <!-- 1) Логотип MedHub сверху, по центру -->
+    <ImageView
+        android:id="@+id/imgLogoHome"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/medhub_logo"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="Логотип MedHub"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp" />
 
-        <!-- 1) Поле "Поиск врачей": белый фон, чёрный текст -->
-        <EditText
-            android:id="@+id/etSearch"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Поиск врачей"
-            android:inputType="textCapSentences"
-            android:background="@drawable/rounded_search_bg"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
-            android:drawableStart="@android:drawable/ic_menu_search"
-            android:drawableTint="@color/gray"
-            android:layout_marginBottom="16dp" />
-
-        <!-- 2) Кнопка "Мои записи" -->
-        <LinearLayout
-            android:id="@+id/buttonMyAppointments"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_search_bg"
-            android:padding="16dp"
-            android:layout_marginBottom="12dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_agenda"
-                android:tint="@color/gray"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Мои записи"
-                android:textSize="16sp"
-                android:textColor="@color/black" />
-        </LinearLayout>
-
-        <!-- 3) Список врачей -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvDoctors"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingBottom="8dp" />
-
-    </LinearLayout>
-
-    <!-- Эта view с весом 1 заполнит оставшееся пространство под контентом -->
-    <View
+    <!-- 2) Список врачей (RecyclerView) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDoctors"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
+
+    <!-- 3) Заполнитель (чтобы список был близко к нижнему меню) -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
 
     <!-- 4) Bottom Navigation без боковых и нижних отступов -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -85,6 +44,8 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
+
 
 
 

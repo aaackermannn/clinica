@@ -2,8 +2,8 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextView tvNoPreviousAppointments;
+    private ImageView imgUserAvatar;
+    private TextView tvFullName, tvEmail;
     private Button btnLogout;
 
     @Override
@@ -20,12 +21,17 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Вместо RecyclerView используем только TextView
-        tvNoPreviousAppointments = findViewById(R.id.tvNoPreviousAppointments);
-        // Поскольку адаптера пока нет, просто оставляем сообщение видимым:
-        tvNoPreviousAppointments.setVisibility(View.VISIBLE);
+        imgUserAvatar = findViewById(R.id.imgUserAvatar);
+        tvFullName    = findViewById(R.id.tvFullName);
+        tvEmail       = findViewById(R.id.tvEmail);
+        btnLogout     = findViewById(R.id.btnLogout);
 
-        btnLogout = findViewById(R.id.btnLogout);
+        // Здесь могли бы взяться реальные данные пользователя,
+        // но пока оставим статичные:
+        tvFullName.setText("Иван Иванов");
+        tvEmail.setText("ivan@example.com");
+        // imgUserAvatar.setImageResource(R.drawable/user_placeholder);
+        imgUserAvatar.setImageResource(android.R.drawable.sym_def_app_icon);
         btnLogout.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
             finishAffinity();
@@ -39,13 +45,13 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (id == R.id.nav_profile) {
-                // Уже на экране профиля
-                return true;
+                return true; // уже здесь
             }
             return false;
         });
     }
 }
+
 
 
 

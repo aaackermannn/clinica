@@ -3,8 +3,6 @@ package com.raven.clinic;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,78 +11,84 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.List;
 
 public class MyAppointmentsActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerViewAppointments;
-    private TextView tvEmptyState;
-    private AppointmentsAdapter adapter;
-    private List<AppointmentManager.Appointment> appointmentsList;
+    private RecyclerView rvActiveAppointments;
+    private TextView tvNoActiveAppointments;
+    private ActiveAppointmentsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_appointments);
-        setupBottomNavigation();
 
-        recyclerViewAppointments = findViewById(R.id.recyclerViewAppointments);
-        tvEmptyState = findViewById(R.id.tvEmptyState);
+        rvActiveAppointments   = findViewById(R.id.rvActiveAppointments);
+        tvNoActiveAppointments = findViewById(R.id.tvNoActiveAppointments);
 
-        // Получаем список из AppointmentManager
-        appointmentsList = AppointmentManager.getInstance().getAppointments();
+        List<AppointmentManager.Appointment> active =
+                AppointmentManager.getInstance().getAllAppointments();
 
-        if (appointmentsList.isEmpty()) {
-            // Если нет активных записей
-            tvEmptyState.setVisibility(View.VISIBLE);
-            recyclerViewAppointments.setVisibility(View.GONE);
+        if (active == null || active.isEmpty()) {
+            tvNoActiveAppointments.setVisibility(View.VISIBLE);
+            rvActiveAppointments.setVisibility(View.GONE);
         } else {
-            // Показываем список
-            tvEmptyState.setVisibility(View.GONE);
-            recyclerViewAppointments.setVisibility(View.VISIBLE);
-
-            recyclerViewAppointments.setLayoutManager(new LinearLayoutManager(this));
-            adapter = new AppointmentsAdapter(appointmentsList);
-            recyclerViewAppointments.setAdapter(adapter);
+            tvNoActiveAppointments.setVisibility(View.GONE);
+            rvActiveAppointments.setVisibility(View.VISIBLE);
+            rvActiveAppointments.setLayoutManager(new LinearLayoutManager(this));
+            adapter = new ActiveAppointmentsAdapter(active);
+            rvActiveAppointments.setAdapter(adapter);
         }
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(MyAppointmentsActivity.this, HomeActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_profile) {
+                startActivity(new Intent(MyAppointmentsActivity.this, ProfileActivity.class));
+                finish();
+                return true;
+            }
+            return false;
+        });
     }
 
-    private void setupBottomNavigation() {
-        findViewById(R.id.nav_home).setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-
-        findViewById(R.id.nav_profile).setOnClickListener(v -> {
-            startActivity(new Intent(this, ProfileActivity.class));
-            finish();
-        });
-    }
-
-    // Адаптер для списка записей
-    private class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
+    // Адаптер для активных записей
+    private class ActiveAppointmentsAdapter
+            extends RecyclerView.Adapter<ActiveAppointmentsAdapter.AppointmentViewHolder> {
 
         private final List<AppointmentManager.Appointment> appointments;
 
-        public AppointmentsAdapter(List<AppointmentManager.Appointment> appointments) {
+        ActiveAppointmentsAdapter(List<AppointmentManager.Appointment> appointments) {
             this.appointments = appointments;
         }
 
         @NonNull
         @Override
-        public AppointmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.item_appointment, parent, false);
+        public AppointmentViewHolder onCreateViewHolder(
+                @NonNull android.view.ViewGroup parent, int viewType) {
+            android.view.View view = android.view.LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_my_appointment, parent, false);
             return new AppointmentViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull AppointmentViewHolder holder, int position) {
+        public void onBindViewHolder(
+                @NonNull AppointmentViewHolder holder, int position) {
             AppointmentManager.Appointment appt = appointments.get(position);
 
-            // Загружаем фото врача
+            holder.tvDoctorName.setText(appt.doctorName);
+            holder.tvSpecialty.setText(appt.specialty);
+            holder.tvDateTime.setText(appt.dateTime);
+
             int resId = getResources().getIdentifier(
-                    appt.photoName.replace(".png", ""),
+                    appt.doctorPhoto.replace(".png", ""),
                     "drawable",
                     getPackageName()
             );
@@ -94,21 +98,17 @@ public class MyAppointmentsActivity extends AppCompatActivity {
                 holder.imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
             }
 
-            holder.tvDoctorName.setText(appt.doctorName);
-            holder.tvSpecialty.setText(appt.specialty);
-            holder.tvDateTime.setText(appt.dateTime);
-
-            holder.btnCancel.setOnClickListener(v -> {
-                // Удаляем запись из менеджера и из списка
-                AppointmentManager.getInstance().getAppointments().remove(position);
+            holder.btnMyCancel.setOnClickListener(v -> {
+                AppointmentManager.getInstance().removeAppointment(appt.doctorName);
                 appointments.remove(position);
                 notifyItemRemoved(position);
-                Toast.makeText(MyAppointmentsActivity.this, "Запись отменена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyAppointmentsActivity.this,
+                        "Запись отменена", Toast.LENGTH_SHORT).show();
 
+                // Если больше нет записей, переключаемся на пустой экран
                 if (appointments.isEmpty()) {
-                    // Если после удаления список пуст, показываем сообщение
-                    tvEmptyState.setVisibility(View.VISIBLE);
-                    recyclerViewAppointments.setVisibility(View.GONE);
+                    tvNoActiveAppointments.setVisibility(View.VISIBLE);
+                    rvActiveAppointments.setVisibility(View.GONE);
                 }
             });
         }
@@ -120,21 +120,17 @@ public class MyAppointmentsActivity extends AppCompatActivity {
 
         class AppointmentViewHolder extends RecyclerView.ViewHolder {
             android.widget.ImageView imgDoctorPhoto;
-            TextView tvDoctorName, tvSpecialty, tvDateTime;
-            Button btnCancel;
+            android.widget.TextView tvDoctorName, tvSpecialty, tvDateTime;
+            android.widget.Button btnMyCancel;
 
-            public AppointmentViewHolder(@NonNull View itemView) {
+            AppointmentViewHolder(@NonNull android.view.View itemView) {
                 super(itemView);
-                imgDoctorPhoto = itemView.findViewById(R.id.imgDoctorPhoto);
-                tvDoctorName = itemView.findViewById(R.id.tvDoctorName);
-                tvSpecialty = itemView.findViewById(R.id.tvSpecialty);
-                tvDateTime = itemView.findViewById(R.id.tvDateTime);
-                btnCancel = itemView.findViewById(R.id.btnCancel);
+                imgDoctorPhoto     = itemView.findViewById(R.id.imgMyDoctorPhoto);
+                tvDoctorName       = itemView.findViewById(R.id.tvMyDoctorName);
+                tvSpecialty        = itemView.findViewById(R.id.tvMySpecialty);
+                tvDateTime         = itemView.findViewById(R.id.tvMyDateTime);
+                btnMyCancel        = itemView.findViewById(R.id.btnMyCancel);
             }
         }
     }
 }
-
-
-
-

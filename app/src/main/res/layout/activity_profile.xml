@@ -5,64 +5,145 @@
     android:orientation="vertical"
     android:background="@color/dark_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
-    <!-- Секция "Мои предыдущие записи" -->
+    <!-- 1) Верхняя панель: заголовок -->
     <TextView
-        android:id="@+id/tvPreviousAppointmentsLabel"
+        android:id="@+id/tvProfileTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Мои предыдущие записи"
-        android:textSize="18sp"
+        android:text="Профиль"
+        android:textSize="24sp"
         android:textColor="@color/white"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp" />
-
-    <!-- Здесь можно разместить RecyclerView или просто TextView-плейсхолдер -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPreviousAppointments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
-        android:background="@drawable/rounded_search_bg" />
-
-    <!-- Если записей нет, показываем сообщение -->
-    <TextView
-        android:id="@+id/tvNoPreviousAppointments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Нет предыдущих записей"
-        android:textSize="16sp"
-        android:textColor="@color/light_gray"
+        android:textStyle="bold"
         android:gravity="center"
-        android:padding="16dp"
-        android:visibility="visible" />
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp" />
 
-    <!-- Кнопка «Выйти» -->
+    <!-- 2) Карточка с данными пользователя -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:background="@color/white"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Аватар пользователя -->
+            <ImageView
+                android:id="@+id/imgUserAvatar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/user_placeholder"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="16dp" />
+
+            <!-- Имя и email -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvFullName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Иван Иванов"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ivan@example.com"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- 3) Пункт «Настройки» -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@drawable/rounded_search_bg"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:tint="@color/gray"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Настройки"
+            android:textSize="16sp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <!-- 4) Пункт «Справка» -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@drawable/rounded_search_bg"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_info_details"
+            android:tint="@color/gray"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Справка"
+            android:textSize="16sp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <!-- 5) Кнопка «Выйти» -->
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="Выйти"
-        android:textColor="@color/white"
         android:background="@drawable/rounded_button"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:textColor="@color/white"
         android:layout_marginBottom="16dp" />
 
-    <!-- Эта пустая view займёт всё свободное пространство, чтобы BottomNav всегда был внизу -->
+    <!-- 6) Заполнитель для BottomNav -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Bottom Navigation приклеен к низу -->
+    <!-- 7) Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -72,6 +153,7 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
 
 
 
