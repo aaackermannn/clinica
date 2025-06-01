@@ -1,27 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/dark_bg">
 
-    <TextView
+    <!-- Основной контент (растягивается) -->
+    <ScrollView
+        android:id="@+id/scrollContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Мои записи"
-        android:textSize="24sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:padding="16dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:padding="16dp">
 
-    <!-- RecyclerView для записей -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvAppointments"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Заголовок «Мои записи» -->
+            <TextView
+                android:id="@+id/tvMyAppointmentsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Мои записи"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Список записей -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAppointments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Нижнее меню навигации -->
+    <include
+        android:id="@+id/bottom_navigation"
+        layout="@layout/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"/>
-
-    <include layout="@layout/bottom_nav"/>
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

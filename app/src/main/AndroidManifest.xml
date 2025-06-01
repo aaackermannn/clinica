@@ -16,8 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".SignUpActivity" />
+        <activity
+            android:name=".SignUpActivity"
+            android:parentActivityName=".LoginActivity">
+            <!-- если нужна обратная совместимость: -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
         <activity android:name=".HomeActivity" />
         <activity android:name=".DoctorsActivity" />
         <activity android:name=".AppointmentActivity" />

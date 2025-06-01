@@ -15,16 +15,15 @@
         <EditText
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-        android:minHeight="48dp"
-        android:inputType="text"
-        android:autofillHints="search"
-        android:hint="@string/search_hint"
-        android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:background="@drawable/edittext_background"/>
+            android:layout_height="wrap_content"
+            android:hint="Поиск врача"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"/>
+
 
         <!-- RecyclerView для врачей -->
         <androidx.recyclerview.widget.RecyclerView

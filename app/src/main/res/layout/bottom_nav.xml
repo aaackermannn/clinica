@@ -1,44 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:elevation="8dp">
+    android:layout_height="56dp"
+    android:background="@color/light_gray"
+    android:gravity="center">
 
+    <!-- Домой -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:id="@+id/nav_home"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
 
-        <Button
-            android:id="@+id/nav_home"
-            android:layout_width="0dp"
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_home"
+            android:tint="@color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="Домой"
-            android:drawableTop="@drawable/ic_home"
-            style="@style/NavButtonStyle"/>
-
-        <Button
-            android:id="@+id/nav_add"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Запись"
-            android:drawableTop="@drawable/ic_add"
-            style="@style/NavButtonStyle"/>
-
-        <Button
-            android:id="@+id/nav_profile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Профиль"
-            android:drawableTop="@drawable/ic_profile"
-            style="@style/NavButtonStyle"/>
+            android:textSize="12sp"
+            android:textColor="@color/white"/>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Запись (добавить) -->
+    <LinearLayout
+        android:id="@+id/nav_add"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_add"
+            android:tint="@color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Запись"
+            android:textSize="12sp"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <!-- Профиль -->
+    <LinearLayout
+        android:id="@+id/nav_profile"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_profile"
+            android:tint="@color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Профиль"
+            android:textSize="12sp"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+</LinearLayout>

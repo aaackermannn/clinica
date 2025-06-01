@@ -16,7 +16,7 @@ public class ConfirmationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
 
-        // Получаем данные о записи
+        // Получаем данные из Intent
         String doctorName = getIntent().getStringExtra("doctor_name");
         String doctorSpecialty = getIntent().getStringExtra("doctor_specialty");
         long dateTimeMillis = getIntent().getLongExtra("date_time", 0);
@@ -24,32 +24,34 @@ public class ConfirmationActivity extends AppCompatActivity {
         // Форматируем дату и время
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String date = dateFormat.format(new Date(dateTimeMillis));
-        String time = timeFormat.format(new Date(dateTimeMillis));
+        String dateStr = dateFormat.format(new Date(dateTimeMillis));
+        String timeStr = timeFormat.format(new Date(dateTimeMillis));
 
-        // Устанавливаем данные в UI
+        // Удостоверяемся, что в activity_confirmation.xml есть именно такие IDs
         TextView tvDoctorName = findViewById(R.id.tvDoctorName);
         TextView tvSpecialty = findViewById(R.id.tvSpecialty);
         TextView tvDate = findViewById(R.id.tvDate);
         TextView tvTime = findViewById(R.id.tvTime);
 
+        // Заполняем UI
         tvDoctorName.setText(doctorName);
         tvSpecialty.setText(doctorSpecialty);
-        tvDate.setText("Дата: " + date);
-        tvTime.setText("Время: " + time);
+        tvDate.setText("Дата: " + dateStr);
+        tvTime.setText("Время: " + timeStr);
 
         Button btnBackToHub = findViewById(R.id.btnBackToHub);
         Button btnCancelBooking = findViewById(R.id.btnCancelBooking);
 
         btnBackToHub.setOnClickListener(v -> {
-            // Возвращаемся на главный экран
             startActivity(new Intent(this, HomeActivity.class));
             finish();
         });
 
         btnCancelBooking.setOnClickListener(v -> {
-            // Отменяем запись
-            finish(); // Просто закрываем экран
+            // Просто закрываем экран, возвращаясь на предыдущий
+            finish();
         });
     }
 }
+
+

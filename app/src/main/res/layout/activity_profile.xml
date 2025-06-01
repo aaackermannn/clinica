@@ -1,38 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@color/white"
-    android:gravity="center">
+    android:background="@color/dark_bg">
 
-    <TextView
-        android:id="@+id/tvFullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Иван Иванов"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/tvEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ivan@example.com"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"/>
-
-    <Button
-        android:id="@+id/btnLogout"
+    <!-- Основной контент (растягивается) -->
+    <ScrollView
+        android:id="@+id/scrollContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Выйти"
-        android:textColor="@color/primary"
-        android:backgroundTint="@color/transparent"
-        android:layout_marginTop="32dp"
-        android:padding="16dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:padding="16dp">
 
-    <include layout="@layout/bottom_nav"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
 
+            <!-- Убрана попытка подключить несуществующий ic_profile_placeholder -->
+            <!-- Если нужен аватар, добавьте свой drawable и замените @drawable/ic_profile_placeholder на существующий -->
+            <ImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="Аватар"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/edittext_background"
+                android:padding="8dp"/>
+
+            <!-- ФИО -->
+            <TextView
+                android:id="@+id/tvFullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Иван Иванов"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Email -->
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ivan@example.com"
+                android:textSize="16sp"
+                android:textColor="@color/gray"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Кнопка «Выйти» -->
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Выйти"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:backgroundTint="@color/primary"
+                android:padding="12dp"
+                android:layout_marginBottom="32dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Нижнее меню навигации -->
+    <include
+        android:id="@+id/bottom_navigation"
+        layout="@layout/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>
+

@@ -1,42 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    android:background="@color/light_gray">
 
-    <TextView
-        android:id="@+id/tvDoctorName"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Доктор Шон Мерфи"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:padding="12dp">
 
-    <TextView
-        android:id="@+id/tvSpecialty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Хирург"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+        <!-- Имя врача -->
+        <TextView
+            android:id="@+id/tvDoctorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Доктор Иванов"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="4dp"/>
 
-    <TextView
-        android:id="@+id/tvDateTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="23 Марта 2025, 16:00"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp"/>
+        <!-- Специальность -->
+        <TextView
+            android:id="@+id/tvSpecialty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Кардиолог"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Отменить запись"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/primary"
-        android:layout_marginTop="8dp"/>
+        <!-- Дата и время -->
+        <TextView
+            android:id="@+id/tvDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15 июня 2025, 14:30"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"/>
 
-</LinearLayout>
+        <!-- Кнопка «Отменить» -->
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="Отменить"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:backgroundTint="@color/primary"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,110 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/white">
+    android:background="@color/dark_bg">
 
+    <!-- Стрелка «Назад» -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_arrow_back_white"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:tint="@color/white"
+        android:contentDescription="Назад"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Логотип картинкой -->
+    <ImageView
+        android:id="@+id/ivLogoSignUp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/logo_medhub"
+        android:contentDescription="Логотип Med hub"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Контейнер для полей регистрации -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/signUpFormContainer"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/ivLogoSignUp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="941"
-            android:textSize="24sp"
-            android:textColor="@color/gray"
-            android:layout_gravity="end"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Med hub"
-            android:textSize="36sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="40dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Регистрация"
-            android:textSize="24sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:layout_marginBottom="24dp"/>
-
-        <!-- Full Name Field -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Фамилия и имя"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp"/>
-
+        <!-- ФИО -->
         <EditText
             android:id="@+id/etFullName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Введите ваше имя"
+            android:layout_height="48dp"
+            android:hint="Фамилия и имя"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
             android:textColorHint="@color/gray"
             android:background="@drawable/edittext_background"
-            android:padding="16dp"/>
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
 
-        <!-- Email Field -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Почта"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
-
+        <!-- Email -->
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="example@mail.com"
-            android:textColorHint="@color/gray"
+            android:layout_height="48dp"
+            android:hint="Электронная почта"
             android:inputType="textEmailAddress"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray"
             android:background="@drawable/edittext_background"
-            android:padding="16dp"/>
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
 
-        <!-- Password Field -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Пароль"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
-
+        <!-- Пароль -->
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="••••••••"
-            android:textColorHint="@color/gray"
+            android:layout_height="48dp"
+            android:hint="Пароль"
             android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray"
             android:background="@drawable/edittext_background"
-            android:padding="16dp"/>
+            android:padding="12dp"
+            android:layout_marginBottom="24dp"/>
 
+        <!-- Кнопка «Зарегистрироваться» -->
         <Button
             android:id="@+id/btnSignUp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="Зарегистрироваться"
             android:textColor="@color/white"
+            android:textSize="16sp"
             android:backgroundTint="@color/primary"
-            android:layout_marginTop="32dp"
-            android:padding="16dp"/>
-
+            android:padding="12dp"/>
     </LinearLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
