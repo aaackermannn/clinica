@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- Пример содержимого профиля (имя/емейл и кнопка logout) -->
+    <!-- Имя пользователя -->
     <TextView
         android:id="@+id/tvFullName"
         android:layout_width="wrap_content"
@@ -18,6 +18,7 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
+    <!-- Email -->
     <TextView
         android:id="@+id/tvEmail"
         android:layout_width="wrap_content"
@@ -27,16 +28,17 @@
         android:textColor="@color/light_gray"
         android:layout_marginBottom="24dp" />
 
+    <!-- Кнопка «Выйти» -->
     <Button
-        android:id="@+id/btnLogout"         <!-- <-- Обязательно должно быть именно это id -->
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:text="Выйти"
-    android:textColor="@color/white"
-    android:background="@drawable/rounded_button"
-    android:layout_marginBottom="32dp" />
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Выйти"
+        android:textColor="@color/white"
+        android:background="@drawable/rounded_button"
+        android:layout_marginBottom="32dp" />
 
-    <!-- Bottom Navigation без "+" (повторно используем меню без nav_add) -->
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -46,6 +48,9 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
+
+
 
 
 

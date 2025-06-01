@@ -3,33 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/homeRoot"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/dark_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- 1) Поле "Поиск врачей" (без дублирования inputType) -->
+    <!-- 1) Поле "Поиск врачей": белый фон, чёрный текст -->
     <EditText
         android:id="@+id/etSearch"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Поиск врачей"
         android:inputType="textCapSentences"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawableTint="@color/gray"
-        android:padding="12dp"
+        android:background="@drawable/rounded_search_bg"
         android:textColor="@color/black"
         android:textColorHint="@color/gray"
-        android:background="@drawable/rounded_edittext"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawableTint="@color/gray"
         android:layout_marginBottom="16dp" />
 
-    <!-- 2) Кнопка "Мои записи" -->
+    <!-- 2) Кнопка "Мои записи": белый фон, чёрный текст -->
     <LinearLayout
         android:id="@+id/buttonMyAppointments"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
+        android:background="@drawable/rounded_search_bg"
         android:padding="16dp"
         android:layout_marginBottom="12dp"
         android:clickable="true"
@@ -51,7 +50,7 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
-    <!-- 3) Список врачей (RecyclerView) -->
+    <!-- 3) Список врачей -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDoctors"
         android:layout_width="match_parent"
@@ -59,7 +58,7 @@
         android:layout_weight="1"
         android:paddingBottom="8dp" />
 
-    <!-- 4) Bottom Navigation без "+" -->
+    <!-- 4) Bottom Navigation View -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -69,6 +68,8 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
+
 
 
 

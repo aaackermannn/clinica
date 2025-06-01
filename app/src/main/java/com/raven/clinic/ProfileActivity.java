@@ -4,35 +4,39 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Button btnLogout = findViewById(R.id.btnLogout);
+        btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> {
-            startActivity(new Intent(this, LoginActivity.class));
+            // Возвращаемся на экран входа
+            startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
             finishAffinity();
         });
 
-        setupBottomNavigation();
-    }
-
-    private void setupBottomNavigation() {
-        findViewById(R.id.nav_home).setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-        findViewById(R.id.nav_add).setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
-        findViewById(R.id.nav_profile).setOnClickListener(v -> {
-            // уже здесь
+        // BottomNavigationView
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_profile) {
+                // Уже на экране профиля
+                return true;
+            }
+            return false;
         });
     }
 }
+
 

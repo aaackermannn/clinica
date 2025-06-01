@@ -6,27 +6,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Empty State (скрывается, если есть записи) -->
-    <TextView
-        android:id="@+id/tvEmptyState"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Активных записей нет"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:gravity="center"
-        android:visibility="gone"
-        android:layout_marginTop="24dp"/>
-
-    <!-- RecyclerView для записей -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewAppointments"
+    <!-- Контейнер для пустого состояния или списка (он тянется на всё свободное пространство) -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp" />
+        android:padding="16dp">
 
-    <!-- Bottom Navigation -->
+        <!-- Текст, если записей нет -->
+        <TextView
+            android:id="@+id/tvEmptyState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Активных записей нет"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <!-- RecyclerView для списка записей -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAppointments"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Bottom Navigation всегда внизу -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -36,5 +42,6 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
 
 

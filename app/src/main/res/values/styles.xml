@@ -2,32 +2,36 @@
 <resources>
 
     <!-- Базовая тёмная тема с оранжевыми акцентами -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <!-- Цвет тулбара -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Основные цвета -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/primary</item>
-        <!-- По умолчанию фон приложений: тёмный -->
+        <!-- Установка фонового цвета окна -->
         <item name="android:windowBackground">@color/dark_bg</item>
-        <!-- Стили для кнопок и текста -->
+        <!-- По умолчанию текст белый -->
         <item name="android:textColor">@color/white</item>
+        <!-- Кнопки оранжевые -->
         <item name="android:buttonStyle">@style/MyButtonStyle</item>
+        <!-- EditText с тёмным фоном и белым текстом -->
         <item name="android:editTextStyle">@style/MyEditTextStyle</item>
     </style>
 
-    <!-- Кастомный стиль для Button: оранжевый фон, белый текст, округлые углы -->
+    <!-- Стиль для Button: оранжевый фон, белый текст, округлые углы -->
     <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/rounded_button</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">16sp</item>
     </style>
 
-    <!-- Кастомный стиль для EditText: тёмный фон, светло‑серый текст‑хинт, белый ввод -->
-    <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
+    <!-- Стиль для EditText: тёмно-серый фон, белый ввод и светло-серый hint -->
+    <style name="MyEditTextStyle" parent="@style/Widget.AppCompat.EditText">
         <item name="android:background">@drawable/rounded_edittext</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">@color/light_gray</item>
+        <item name="android:padding">12dp</item>
     </style>
 
 </resources>
+
 

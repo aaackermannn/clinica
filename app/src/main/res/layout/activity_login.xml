@@ -7,7 +7,16 @@
     android:layout_height="match_parent"
     android:background="@color/dark_bg">
 
-    <!-- Электронная почта -->
+    <!-- Логотип MedHub -->
+    <ImageView
+        android:id="@+id/imgLogoLogin"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/medhub_logo"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="Логотип MedHub" />
+
+    <!-- Email -->
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
@@ -39,9 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="Войти с MedID"
-        android:textColor="@color/white"
-        android:textSize="16sp"
         android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
         android:layout_marginBottom="8dp" />
 
     <!-- Ссылка «Нет аккаунта? Зарегистрируйтесь» -->
@@ -53,6 +61,7 @@
         android:textColor="@color/primary"
         android:layout_marginTop="16dp" />
 </LinearLayout>
+
 
 
 

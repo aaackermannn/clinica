@@ -1,54 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_bg">
 
-    <EditText
-        android:id="@+id/editTextSignUpEmail"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Электронная почта"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/white"
-        android:textColorHint="@color/light_gray"
-        android:background="@drawable/rounded_edittext"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        android:padding="24dp">
 
-    <EditText
-        android:id="@+id/editTextSignUpPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Пароль"
-        android:inputType="textCapSentences"
-        android:textColor="@color/white"
-        android:textColorHint="@color/light_gray"
-        android:background="@drawable/rounded_edittext"
-        android:padding="12dp"
-        android:layout_marginBottom="24dp" />
+        <!-- Логотип MedHub -->
+        <ImageView
+            android:id="@+id/imgLogoSignUp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/medhub_logo"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="Логотип MedHub" />
 
-    <Button
-        android:id="@+id/buttonSignUpMedID"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Зарегистрироваться"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:background="@drawable/rounded_button"
-        android:layout_marginBottom="8dp" />
+        <!-- Электронная почта -->
+        <EditText
+            android:id="@+id/editTextSignUpEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Электронная почта"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
 
-    <TextView
-        android:id="@+id/textViewGoToLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Уже есть аккаунт? Войти"
-        android:textColor="@color/primary"
-        android:layout_marginTop="16dp" />
-</LinearLayout>
+        <!-- Пароль -->
+        <EditText
+            android:id="@+id/editTextSignUpPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Пароль"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Подтвердите пароль -->
+        <EditText
+            android:id="@+id/editTextSignUpConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Подтвердите пароль"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Кнопка «Зарегистрироваться» -->
+        <Button
+            android:id="@+id/buttonSignUpMedID"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Зарегистрироваться"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Ссылка «Уже есть аккаунт? Войти» -->
+        <TextView
+            android:id="@+id/textViewGoToLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Уже есть аккаунт? Войти"
+            android:textColor="@color/primary"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>
+
 
 
 

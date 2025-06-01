@@ -2,7 +2,9 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -11,8 +13,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class AppointmentActivity extends AppCompatActivity {
 
+    private ImageButton btnBack;
     private ImageView imgDoctorPhoto;
     private TextView tvDoctorName, tvSpecialty;
     private RadioGroup rgDateTimeOptions;
@@ -25,24 +30,23 @@ public class AppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
 
-        // 1) Получаем переданные данные
-        Intent intent = getIntent();
-        doctorName = intent.getStringExtra("doctor_name");
-        doctorSpecialty = intent.getStringExtra("doctor_specialty");
-        doctorPhoto = intent.getStringExtra("doctor_photo");
-
-        // 2) Находим View
+        // 1) Инициализация View
+        btnBack = findViewById(R.id.btnBack);
         imgDoctorPhoto = findViewById(R.id.imgAppointmentDoctorPhoto);
         tvDoctorName = findViewById(R.id.tvDoctorName);
         tvSpecialty = findViewById(R.id.tvSpecialty);
         rgDateTimeOptions = findViewById(R.id.rgDateTimeOptions);
         btnConfirm = findViewById(R.id.btnConfirm);
 
-        // 3) Устанавливаем данные в UI
+        // 2) Получаем данные о враче из Intent
+        Intent intent = getIntent();
+        doctorName = intent.getStringExtra("doctor_name");
+        doctorSpecialty = intent.getStringExtra("doctor_specialty");
+        doctorPhoto = intent.getStringExtra("doctor_photo"); // например "billie.png"
+
+        // Устанавливаем текст и фото врача
         tvDoctorName.setText(doctorName);
         tvSpecialty.setText(doctorSpecialty);
-
-        // Загружаем фото врача
         int resId = getResources().getIdentifier(
                 doctorPhoto.replace(".png", ""),
                 "drawable",
@@ -54,12 +58,10 @@ public class AppointmentActivity extends AppCompatActivity {
             imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
         }
 
-        // 4) Варианты выбора даты/времени (меняем текст в зависимости от врача)
+        // 3) Настраиваем варианты радиокнопок в зависимости от врача
         RadioButton rb1 = findViewById(R.id.rbOption1);
         RadioButton rb2 = findViewById(R.id.rbOption2);
         RadioButton rb3 = findViewById(R.id.rbOption3);
-
-        // Задаём уникальные варианты для каждого врача
         switch (doctorName) {
             case "Billi Ailish":
                 rb1.setText("30 июня 2025, 09:00");
@@ -81,12 +83,12 @@ public class AppointmentActivity extends AppCompatActivity {
                 rb2.setText("28 июня 2025, 11:00");
                 rb3.setText("30 июня 2025, 13:45");
                 break;
-            default:
-                // Если вдруг имя непривычное – оставить дефолтные тексты из XML
-                break;
         }
 
-        // 5) Обработка кнопки «Записаться»
+        // 4) Обработка кнопки Назад
+        btnBack.setOnClickListener(v -> finish());
+
+        // 5) Кнопка «Записаться»
         btnConfirm.setOnClickListener(v -> {
             int selectedId = rgDateTimeOptions.getCheckedRadioButtonId();
             if (selectedId == -1) {
@@ -96,13 +98,13 @@ public class AppointmentActivity extends AppCompatActivity {
             RadioButton selectedRb = findViewById(selectedId);
             String dateTime = selectedRb.getText().toString();
 
-            // Добавляем запись в AppointmentManager
+            // Добавляем запись в одиночный менеджер
             AppointmentManager.Appointment appt = new AppointmentManager.Appointment(
                     doctorName, doctorSpecialty, dateTime, doctorPhoto
             );
             AppointmentManager.getInstance().addAppointment(appt);
 
-            // Переходим на ConfirmationActivity, передаём дату/время и фото
+            // Переходим на ConfirmationActivity
             Intent confirmIntent = new Intent(AppointmentActivity.this, ConfirmationActivity.class);
             confirmIntent.putExtra("doctor_name", doctorName);
             confirmIntent.putExtra("doctor_specialty", doctorSpecialty);
@@ -111,8 +113,26 @@ public class AppointmentActivity extends AppCompatActivity {
             startActivity(confirmIntent);
             finish();
         });
+
+        // 6) BottomNavigationView: Домой и Профиль
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(AppointmentActivity.this, HomeActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_profile) {
+                startActivity(new Intent(AppointmentActivity.this, ProfileActivity.class));
+                finish();
+                return true;
+            }
+            return false;
+        });
     }
 }
+
+
 
 
 

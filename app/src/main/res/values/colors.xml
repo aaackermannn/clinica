@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Тёмный фон -->
     <color name="dark_bg">#121212</color>
+    <!-- Оранжевый акцент -->
     <color name="primary">#FF9800</color>
     <color name="primary_dark">#F57C00</color>
+    <!-- Белый и чёрный -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <!-- Оттенки серого -->
     <color name="light_gray">#CCCCCC</color>
     <color name="gray">#808080</color>
 </resources>
+
 
 
 

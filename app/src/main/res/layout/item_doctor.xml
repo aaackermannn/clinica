@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp"
-    android:background="@drawable/rounded_edittext"
+    android:background="@drawable/rounded_search_bg"
     android:layout_marginBottom="8dp"
     android:gravity="center_vertical">
 
@@ -15,7 +15,7 @@
         android:layout_height="56dp"
         android:scaleType="centerCrop"
         android:layout_marginEnd="12dp"
-        android:background="@drawable/rounded_edittext" />
+        android:background="@drawable/rounded_search_bg" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <!-- Имя (тёмный текст) -->
+        <!-- Имя (чёрный) -->
         <TextView
             android:id="@+id/tvDoctorName"
             android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <!-- Специальность (серый текст) -->
+        <!-- Специальность (серый) -->
         <TextView
             android:id="@+id/tvSpecialty"
             android:layout_width="wrap_content"
@@ -44,15 +44,16 @@
             android:layout_marginTop="4dp" />
     </LinearLayout>
 
-    <!-- Кнопка "Записаться" -->
+    <!-- Кнопка "Записаться" (оранжевая) -->
     <Button
         android:id="@+id/btnBook"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="Записаться"
-        android:textColor="@color/white"
         android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
         android:paddingHorizontal="12dp" />
 </LinearLayout>
+
 
 
