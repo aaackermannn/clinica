@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 1) Верхняя панель с кнопкой Назад -->
+    <!-- Верхняя панель с кнопкой Назад и заголовком -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -16,7 +16,6 @@
         android:paddingEnd="16dp"
         android:gravity="center_vertical">
 
-        <!-- Кнопка Назад -->
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="32dp"
@@ -26,7 +25,6 @@
             android:tint="@color/white"
             android:contentDescription="Назад" />
 
-        <!-- Заголовок экрана -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -39,7 +37,7 @@
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
-    <!-- Основное содержимое прокручиваемое -->
+    <!-- Основное содержимое (ScrollView) -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -81,13 +79,39 @@
                 android:textSize="16sp"
                 android:textColor="@color/light_gray"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Раздел "О враче" с произвольным текстом (до 4 строк) -->
+            <TextView
+                android:id="@+id/tvAboutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="О враче"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvAboutDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Доктор имеет многолетний опыт в области медицины. Специализируется на лечении детей и взрослых, проводит консультации и диагностические процедуры. Постоянно повышает квалификацию и участвует в конференциях."
+                android:textSize="14sp"
+                android:textColor="@color/light_gray"
+                android:lineSpacingExtra="2dp"
+                android:maxLines="4"
+                android:ellipsize="end"
                 android:layout_marginBottom="24dp" />
 
             <!-- Варианты даты/времени (RadioGroup) -->
             <RadioGroup
                 android:id="@+id/rgDateTimeOptions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
 
                 <RadioButton
                     android:id="@+id/rbOption1"
@@ -123,12 +147,11 @@
                 android:layout_height="48dp"
                 android:text="Записаться"
                 android:background="@drawable/rounded_button"
-                android:textColor="@color/white"
-                android:layout_marginTop="24dp" />
+                android:textColor="@color/white" />
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation привязанный к низу -->
+    <!-- Bottom Navigation привязан к низу -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -138,5 +161,6 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
 
 

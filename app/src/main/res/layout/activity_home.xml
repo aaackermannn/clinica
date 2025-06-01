@@ -1,64 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/homeRoot"
     android:orientation="vertical"
     android:background="@color/dark_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <!-- 1) Поле "Поиск врачей": белый фон, чёрный текст -->
-    <EditText
-        android:id="@+id/etSearch"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Поиск врачей"
-        android:inputType="textCapSentences"
-        android:background="@drawable/rounded_search_bg"
-        android:textColor="@color/black"
-        android:textColorHint="@color/gray"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawableTint="@color/gray"
-        android:layout_marginBottom="16dp" />
-
-    <!-- 2) Кнопка "Мои записи": белый фон, чёрный текст -->
+    <!-- Обёртка контента с отступами сверху/сбоку -->
     <LinearLayout
-        android:id="@+id/buttonMyAppointments"
-        android:orientation="horizontal"
+        android:id="@+id/homeContent"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_search_bg"
-        android:padding="16dp"
-        android:layout_marginBottom="12dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackgroundBorderless">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_agenda"
-            android:tint="@color/gray"
-            android:layout_marginEnd="8dp" />
+        <!-- 1) Поле "Поиск врачей": белый фон, чёрный текст -->
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Поиск врачей"
+            android:inputType="textCapSentences"
+            android:background="@drawable/rounded_search_bg"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawableTint="@color/gray"
+            android:layout_marginBottom="16dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- 2) Кнопка "Мои записи" -->
+        <LinearLayout
+            android:id="@+id/buttonMyAppointments"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Мои записи"
-            android:textSize="16sp"
-            android:textColor="@color/black" />
+            android:background="@drawable/rounded_search_bg"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:tint="@color/gray"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Мои записи"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <!-- 3) Список врачей -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDoctors"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="8dp" />
+
     </LinearLayout>
 
-    <!-- 3) Список врачей -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDoctors"
+    <!-- Эта view с весом 1 заполнит оставшееся пространство под контентом -->
+    <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingBottom="8dp" />
+        android:layout_weight="1" />
 
-    <!-- 4) Bottom Navigation View -->
+    <!-- 4) Bottom Navigation без боковых и нижних отступов -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -68,6 +85,7 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
+
 
 
 
