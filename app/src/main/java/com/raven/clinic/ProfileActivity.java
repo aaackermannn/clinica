@@ -26,18 +26,20 @@ public class ProfileActivity extends AppCompatActivity {
         tvEmail       = findViewById(R.id.tvEmail);
         btnLogout     = findViewById(R.id.btnLogout);
 
-        // Здесь могли бы взяться реальные данные пользователя,
-        // но пока оставим статичные:
+        // Пока статические данные
         tvFullName.setText("Иван Иванов");
         tvEmail.setText("ivan@example.com");
-        // imgUserAvatar.setImageResource(R.drawable/user_placeholder);
         imgUserAvatar.setImageResource(android.R.drawable.sym_def_app_icon);
+
         btnLogout.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
             finishAffinity();
         });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        // Отмечаем пункт «Профиль»
+        bottomNav.setSelectedItemId(R.id.nav_profile);
+
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -51,8 +53,3 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 }
-
-
-
-
-

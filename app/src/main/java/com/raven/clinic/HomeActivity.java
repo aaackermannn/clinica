@@ -2,7 +2,6 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,7 +22,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView rvDoctors;
     private DoctorsAdapter adapter;
-    private Button btnMyAppointments;  // добавлено
+    private Button btnMyAppointments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         rvDoctors = findViewById(R.id.rvDoctors);
         rvDoctors.setLayoutManager(new LinearLayoutManager(this));
 
-        // Вернём четырёх врачей с их фотографиями (файлы должны лежать в res/drawable: billie.png, anthony.png, miron.png, skala.png)
+        // Четыре врача с фотографиями (файлы должны лежать в res/drawable: billie.png, anthony.png, miron.png, skala.png)
         List<Doctor> doctors = Arrays.asList(
                 new Doctor("Billi Ailish", "Педиатр", "billie"),
                 new Doctor("Anthony", "Спортивный врач", "anthony"),
@@ -54,6 +53,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        // Сразу отмечаем «Домой»
+        bottomNav.setSelectedItemId(R.id.nav_home);
+
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -80,7 +82,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // Адаптер
+    // Адаптер списка врачей
     private class DoctorsAdapter extends RecyclerView.Adapter<DoctorsAdapter.DoctorViewHolder> {
 
         private final List<Doctor> doctors;
@@ -92,8 +94,7 @@ public class HomeActivity extends AppCompatActivity {
         @NonNull
         @Override
         public DoctorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_doctor, parent, false);
+            View view = getLayoutInflater().inflate(R.layout.item_doctor, parent, false);
             return new DoctorViewHolder(view);
         }
 
@@ -116,7 +117,7 @@ public class HomeActivity extends AppCompatActivity {
                 holder.imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
             }
 
-            // Если у пользователя уже есть активная запись к этому доктору, откроем экран управления записью
+            // При клике на карточку: либо запись, либо управление имеющейся записью
             holder.container.setOnClickListener(v -> {
                 AppointmentManager.Appointment existing =
                         AppointmentManager.getInstance().getAppointmentForDoctor(doctor.name);
@@ -136,7 +137,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
 
-            // Явная кнопка «Записаться» всегда создаёт новую запись (если её нет)
+            // Кнопка «Записаться» всегда ведёт к созданию новой записи (если её нет)
             holder.btnBook.setOnClickListener(v -> {
                 AppointmentManager.Appointment existing =
                         AppointmentManager.getInstance().getAppointmentForDoctor(doctor.name);
@@ -147,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                     intent.putExtra("doctor_photo", doctor.photoResName + ".png");
                     startActivity(intent);
                 } else {
-                    // Если уже есть запись, сразу переходим на экран управления
+                    // Если запись уже есть, переходим в ManageAppointment
                     Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
                     intent.putExtra("doctor_name", doctor.name);
                     intent.putExtra("doctor_specialty", doctor.specialty);
@@ -166,7 +167,7 @@ public class HomeActivity extends AppCompatActivity {
         class DoctorViewHolder extends RecyclerView.ViewHolder {
             View container;
             ImageView imgDoctorPhoto;
-            TextView tvDoctorName, tvSpecialty;
+            TextView tvDoctorName, tvSpecialty, tvAbout;
             Button btnBook;
 
             DoctorViewHolder(@NonNull View itemView) {
@@ -175,6 +176,7 @@ public class HomeActivity extends AppCompatActivity {
                 imgDoctorPhoto  = itemView.findViewById(R.id.imgDoctorPhoto);
                 tvDoctorName    = itemView.findViewById(R.id.tvDoctorName);
                 tvSpecialty     = itemView.findViewById(R.id.tvSpecialty);
+                tvAbout         = itemView.findViewById(R.id.tvAboutDoctor);
                 btnBook         = itemView.findViewById(R.id.btnBook);
             }
         }

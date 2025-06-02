@@ -64,12 +64,12 @@
         android:gravity="center"
         android:layout_marginBottom="24dp" />
 
-    <!-- 6) Кнопка «Отменить запись» (над BottomNav) -->
+    <!-- 6) Кнопка «Перейти в хаб» -->
     <Button
-        android:id="@+id/btnCancelBooking"
+        android:id="@+id/btnGoToHub"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Отменить запись"
+        android:text="Перейти в хаб"
         android:background="@drawable/rounded_button"
         android:textColor="@color/white"
         android:layout_marginStart="16dp"
@@ -93,5 +93,3 @@
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>
-
-

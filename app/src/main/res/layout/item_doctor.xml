@@ -7,7 +7,7 @@
     card_view:cardCornerRadius="12dp"
     card_view:cardElevation="4dp"
     android:layout_marginBottom="12dp"
-    android:foreground="?attr/selectableItemBackground">
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/container_doctor"
@@ -53,19 +53,26 @@
                 android:textSize="14sp"
                 android:textColor="@android:color/darker_gray"
                 android:layout_marginTop="4dp" />
+
+            <!-- Блок «О враче» с текстом-заглушкой -->
+            <TextView
+                android:id="@+id/tvAboutDoctor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="О враче: Опытный специалист с более чем 10-летним стажем. Обслуживает взрослых и детей. Произвольная информация о докторе будет здесь."
+                android:textSize="12sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="6dp" />
         </LinearLayout>
 
-        <!-- Кнопка «Записаться» -->
+        <!-- Кнопка «Записаться» (оранжевая) -->
         <Button
             android:id="@+id/btnBook"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="Записаться"
             android:background="@drawable/rounded_button_small"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
-
-
-
-

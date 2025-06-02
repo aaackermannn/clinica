@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +15,7 @@ public class ConfirmationActivity extends AppCompatActivity {
     private TextView tvConfirmationMessage;
     private ImageView imgDoctorPhoto;
     private TextView tvDoctorName, tvSpecialty, tvDateTime;
-    private Button btnCancelBooking;
+    private Button btnGoToHub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +28,7 @@ public class ConfirmationActivity extends AppCompatActivity {
         tvDoctorName         = findViewById(R.id.tvConfirmedDoctorName);
         tvSpecialty          = findViewById(R.id.tvConfirmedSpecialty);
         tvDateTime           = findViewById(R.id.tvConfirmedDateTime);
-        btnCancelBooking     = findViewById(R.id.btnCancelBooking);
+        btnGoToHub           = findViewById(R.id.btnGoToHub);
 
         // 2) Получаем данные из Intent
         Intent intent = getIntent();
@@ -47,7 +46,7 @@ public class ConfirmationActivity extends AppCompatActivity {
         tvDateTime.setText("Дата/время: " + dateTime);
 
         int resId = getResources().getIdentifier(
-                doctorPhoto.replace(".png",""),
+                doctorPhoto.replace(".png", ""),
                 "drawable",
                 getPackageName()
         );
@@ -57,20 +56,20 @@ public class ConfirmationActivity extends AppCompatActivity {
             imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
         }
 
-        // 5) Обработка кнопки «Отменить запись»
-        btnCancelBooking.setOnClickListener(v -> {
-            Toast.makeText(this, "Запись отменена", Toast.LENGTH_SHORT).show();
+        // 5) Обработка кнопки «Перейти в хаб»
+        btnGoToHub.setOnClickListener(v -> {
             startActivity(new Intent(ConfirmationActivity.this, HomeActivity.class));
             finish();
         });
 
         // 6) BottomNavigationView
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        // Подсвечиваем текущий пункт (Домой)
+        bottomNav.setSelectedItemId(R.id.nav_home);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
-                startActivity(new Intent(ConfirmationActivity.this, HomeActivity.class));
-                finish();
+                // если уже «Домой», ничего не делаем
                 return true;
             } else if (id == R.id.nav_profile) {
                 startActivity(new Intent(ConfirmationActivity.this, ProfileActivity.class));
@@ -81,8 +80,3 @@ public class ConfirmationActivity extends AppCompatActivity {
         });
     }
 }
-
-
-
-
-
