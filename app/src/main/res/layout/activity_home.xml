@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 1) Логотип MedHub сверху, по центру -->
+    <!-- 1) Логотип MedHub -->
     <ImageView
         android:id="@+id/imgLogoHome"
         android:layout_width="120dp"
@@ -18,7 +18,19 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="16dp" />
 
-    <!-- 2) Список врачей (RecyclerView) -->
+    <!-- 2) Кнопка «Мои записи» -->
+    <Button
+        android:id="@+id/btnMyAppointments"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Мои записи"
+        android:background="@drawable/rounded_button"
+        android:textColor="@android:color/white" />
+
+    <!-- 3) Список врачей (RecyclerView) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDoctors"
         android:layout_width="match_parent"
@@ -29,12 +41,12 @@
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
-    <!-- 3) Заполнитель (чтобы список был близко к нижнему меню) -->
+    <!-- 4) Заполнитель перед BottomNav -->
     <View
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
-    <!-- 4) Bottom Navigation без боковых и нижних отступов -->
+    <!-- 5) Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -44,20 +56,3 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

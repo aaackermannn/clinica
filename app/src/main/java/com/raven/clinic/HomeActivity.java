@@ -2,6 +2,12 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,36 +16,40 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView rvDoctors;
     private DoctorsAdapter adapter;
+    private Button btnMyAppointments;  // добавлено
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        btnMyAppointments = findViewById(R.id.btnMyAppointments);
+        btnMyAppointments.setOnClickListener(v -> {
+            startActivity(new Intent(HomeActivity.this, MyAppointmentsActivity.class));
+        });
+
         rvDoctors = findViewById(R.id.rvDoctors);
         rvDoctors.setLayoutManager(new LinearLayoutManager(this));
 
-        // Получаем список всех врачей (четыре: Billi Ailish, Anthony, Мирон Федоров, Скала)
-        List<Doctor> doctors = getAllDoctors();
+        // Вернём четырёх врачей с их фотографиями (файлы должны лежать в res/drawable: billie.png, anthony.png, miron.png, skala.png)
+        List<Doctor> doctors = Arrays.asList(
+                new Doctor("Billi Ailish", "Педиатр", "billie"),
+                new Doctor("Anthony", "Спортивный врач", "anthony"),
+                new Doctor("Мирон Федоров", "Детский логопед", "miron"),
+                new Doctor("Скала", "Уролог", "skala")
+        );
+
         adapter = new DoctorsAdapter(doctors);
         rvDoctors.setAdapter(adapter);
 
         setupBottomNavigation();
-    }
-
-    private List<Doctor> getAllDoctors() {
-        return java.util.Arrays.asList(
-                new Doctor("Billi Ailish", "Педиатр", "billie"),      // имя drawable — billie.png
-                new Doctor("Anthony", "Спортивный врач", "anthony"),  // anthony.png
-                new Doctor("Мирон Федоров", "Детский логопед", "miron"),
-                new Doctor("Скала", "Уролог", "skala")
-        );
     }
 
     private void setupBottomNavigation() {
@@ -47,8 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
-                // уже здесь
-                return true;
+                return true; // уже здесь
             } else if (id == R.id.nav_profile) {
                 startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 finish();
@@ -58,11 +67,11 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    // Внутренний POJO для врача
+    // Класс "Doctor"
     private static class Doctor {
         String name;
         String specialty;
-        String photoResName; // без расширения ".png"
+        String photoResName; // например, "billie" (без .png)
 
         Doctor(String name, String specialty, String photoResName) {
             this.name = name;
@@ -71,8 +80,9 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // Адаптер для списка врачей
+    // Адаптер
     private class DoctorsAdapter extends RecyclerView.Adapter<DoctorsAdapter.DoctorViewHolder> {
+
         private final List<Doctor> doctors;
 
         DoctorsAdapter(List<Doctor> doctors) {
@@ -81,8 +91,8 @@ public class HomeActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public DoctorViewHolder onCreateViewHolder(@NonNull android.view.ViewGroup parent, int viewType) {
-            android.view.View view = android.view.LayoutInflater.from(parent.getContext())
+        public DoctorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_doctor, parent, false);
             return new DoctorViewHolder(view);
         }
@@ -90,10 +100,11 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull DoctorViewHolder holder, int position) {
             Doctor doctor = doctors.get(position);
+
             holder.tvDoctorName.setText(doctor.name);
             holder.tvSpecialty.setText(doctor.specialty);
 
-            // Загружаем фото из drawable по имени
+            // Загружаем фото из drawable по имени (например, billie.png → R.drawable.billie)
             int resId = getResources().getIdentifier(
                     doctor.photoResName,
                     "drawable",
@@ -105,20 +116,38 @@ public class HomeActivity extends AppCompatActivity {
                 holder.imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
             }
 
-            holder.itemView.setOnClickListener(v -> {
-                // 1) Проверяем, есть ли запись к этому врачу
+            // Если у пользователя уже есть активная запись к этому доктору, откроем экран управления записью
+            holder.container.setOnClickListener(v -> {
                 AppointmentManager.Appointment existing =
                         AppointmentManager.getInstance().getAppointmentForDoctor(doctor.name);
-
                 if (existing == null) {
-                    // Нет записи — переходим на AppointmentActivity, чтобы создать новую
                     Intent intent = new Intent(HomeActivity.this, AppointmentActivity.class);
                     intent.putExtra("doctor_name", doctor.name);
                     intent.putExtra("doctor_specialty", doctor.specialty);
                     intent.putExtra("doctor_photo", doctor.photoResName + ".png");
                     startActivity(intent);
                 } else {
-                    // Уже есть запись — показываем экран управления записью
+                    Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
+                    intent.putExtra("doctor_name", doctor.name);
+                    intent.putExtra("doctor_specialty", doctor.specialty);
+                    intent.putExtra("doctor_photo", doctor.photoResName + ".png");
+                    intent.putExtra("current_date_time", existing.dateTime);
+                    startActivity(intent);
+                }
+            });
+
+            // Явная кнопка «Записаться» всегда создаёт новую запись (если её нет)
+            holder.btnBook.setOnClickListener(v -> {
+                AppointmentManager.Appointment existing =
+                        AppointmentManager.getInstance().getAppointmentForDoctor(doctor.name);
+                if (existing == null) {
+                    Intent intent = new Intent(HomeActivity.this, AppointmentActivity.class);
+                    intent.putExtra("doctor_name", doctor.name);
+                    intent.putExtra("doctor_specialty", doctor.specialty);
+                    intent.putExtra("doctor_photo", doctor.photoResName + ".png");
+                    startActivity(intent);
+                } else {
+                    // Если уже есть запись, сразу переходим на экран управления
                     Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
                     intent.putExtra("doctor_name", doctor.name);
                     intent.putExtra("doctor_specialty", doctor.specialty);
@@ -135,20 +164,19 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         class DoctorViewHolder extends RecyclerView.ViewHolder {
-            android.widget.TextView tvDoctorName, tvSpecialty;
-            android.widget.ImageView imgDoctorPhoto;
+            View container;
+            ImageView imgDoctorPhoto;
+            TextView tvDoctorName, tvSpecialty;
+            Button btnBook;
 
-            DoctorViewHolder(@NonNull android.view.View itemView) {
+            DoctorViewHolder(@NonNull View itemView) {
                 super(itemView);
-                imgDoctorPhoto = itemView.findViewById(R.id.imgDoctorPhoto);
-                tvDoctorName   = itemView.findViewById(R.id.tvDoctorName);
-                tvSpecialty    = itemView.findViewById(R.id.tvSpecialty);
+                container       = itemView.findViewById(R.id.container_doctor);
+                imgDoctorPhoto  = itemView.findViewById(R.id.imgDoctorPhoto);
+                tvDoctorName    = itemView.findViewById(R.id.tvDoctorName);
+                tvSpecialty     = itemView.findViewById(R.id.tvSpecialty);
+                btnBook         = itemView.findViewById(R.id.btnBook);
             }
         }
     }
 }
-
-
-
-
-

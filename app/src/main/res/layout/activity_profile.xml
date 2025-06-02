@@ -5,11 +5,9 @@
     android:orientation="vertical"
     android:background="@color/dark_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:layout_height="match_parent">
 
-    <!-- 1) Верхняя панель: заголовок -->
+    <!-- Заголовок -->
     <TextView
         android:id="@+id/tvProfileTitle"
         android:layout_width="match_parent"
@@ -22,14 +20,16 @@
         android:paddingTop="24dp"
         android:paddingBottom="16dp" />
 
-    <!-- 2) Карточка с данными пользователя -->
+    <!-- Карточка профиля -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
-        android:background="@color/white"
-        android:layout_marginBottom="16dp">
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/white">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -37,7 +37,6 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <!-- Аватар пользователя -->
             <ImageView
                 android:id="@+id/imgUserAvatar"
                 android:layout_width="64dp"
@@ -46,7 +45,6 @@
                 android:scaleType="centerCrop"
                 android:layout_marginEnd="16dp" />
 
-            <!-- Имя и email -->
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -73,13 +71,15 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- 3) Пункт «Настройки» -->
+    <!-- Кнопка «Настройки» (пример оформления) -->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:background="@drawable/rounded_search_bg"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp"
         android:clickable="true"
         android:focusable="true"
@@ -100,13 +100,15 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
-    <!-- 4) Пункт «Справка» -->
+    <!-- Кнопка «Справка» -->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:background="@drawable/rounded_search_bg"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp"
         android:clickable="true"
         android:focusable="true"
@@ -127,23 +129,25 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
-    <!-- 5) Кнопка «Выйти» -->
+    <!-- Кнопка «Выйти» -->
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:text="Выйти"
         android:background="@drawable/rounded_button"
-        android:textColor="@color/white"
-        android:layout_marginBottom="16dp" />
+        android:textColor="@color/white" />
 
-    <!-- 6) Заполнитель для BottomNav -->
+    <!-- Заполнитель, чтобы BottomNav «прилипал» к низу -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- 7) Bottom Navigation -->
+    <!-- Bottom Navigation — без отступов, match_parent во всю ширину -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -153,11 +157,3 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
-
-
-
-
-
-
-
-
