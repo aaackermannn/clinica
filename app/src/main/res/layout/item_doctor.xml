@@ -7,7 +7,8 @@
     card_view:cardCornerRadius="12dp"
     card_view:cardElevation="4dp"
     android:layout_marginBottom="12dp"
-    android:background="@color/white">
+    android:background="@android:color/white"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:id="@+id/container_doctor"
@@ -18,7 +19,7 @@
         android:clickable="true"
         android:focusable="true">
 
-        <!-- Фото врача -->
+        <!-- 1) Фото врача -->
         <ImageView
             android:id="@+id/imgDoctorPhoto"
             android:layout_width="64dp"
@@ -34,7 +35,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical">
 
-            <!-- Имя врача -->
+            <!-- 2) Имя врача -->
             <TextView
                 android:id="@+id/tvDoctorName"
                 android:layout_width="wrap_content"
@@ -44,7 +45,7 @@
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
-            <!-- Специальность -->
+            <!-- 3) Специальность -->
             <TextView
                 android:id="@+id/tvSpecialty"
                 android:layout_width="wrap_content"
@@ -54,25 +55,24 @@
                 android:textColor="@android:color/darker_gray"
                 android:layout_marginTop="4dp" />
 
-            <!-- Блок «О враче» с текстом-заглушкой -->
+            <!-- 4) Описание врача -->
             <TextView
-                android:id="@+id/tvAboutDoctor"
+                android:id="@+id/tvDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="О враче: Опытный специалист с более чем 10-летним стажем. Обслуживает взрослых и детей. Произвольная информация о докторе будет здесь."
+                android:text="Краткое описание врача..."
                 android:textSize="12sp"
                 android:textColor="@android:color/darker_gray"
-                android:layout_marginTop="6dp" />
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- Кнопка «Записаться» (оранжевая) -->
+        <!-- 5) Кнопка «Записаться» -->
         <Button
             android:id="@+id/btnBook"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="Записаться"
             android:background="@drawable/rounded_button_small"
-            android:textColor="@android:color/white"
-            android:layout_marginStart="8dp" />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

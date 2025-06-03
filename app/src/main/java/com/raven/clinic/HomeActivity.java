@@ -2,6 +2,7 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,12 +38,32 @@ public class HomeActivity extends AppCompatActivity {
         rvDoctors = findViewById(R.id.rvDoctors);
         rvDoctors.setLayoutManager(new LinearLayoutManager(this));
 
-        // Четыре врача с фотографиями (файлы должны лежать в res/drawable: billie.png, anthony.png, miron.png, skala.png)
+        // Сформируем список из четырёх врачей с уникальным описанием
         List<Doctor> doctors = Arrays.asList(
-                new Doctor("Billi Ailish", "Педиатр", "billie"),
-                new Doctor("Anthony", "Спортивный врач", "anthony"),
-                new Doctor("Мирон Федоров", "Детский логопед", "miron"),
-                new Doctor("Скала", "Уролог", "skala")
+                new Doctor(
+                        "Billi Ailish",
+                        "Педиатр",
+                        "billie",
+                        "Опытный педиатр, специализируется на комплексном лечении детей от 0 до 12 лет."
+                ),
+                new Doctor(
+                        "Anthony",
+                        "Спортивный врач",
+                        "anthony",
+                        "Сертифицированный спортивный врач с более чем 8-летним опытом подготовки спортсменов."
+                ),
+                new Doctor(
+                        "Мирон Федоров",
+                        "Детский логопед",
+                        "miron",
+                        "Помогает детям развить речь и избавиться от нарушений артикуляции с раннего возраста."
+                ),
+                new Doctor(
+                        "Скала",
+                        "Уролог",
+                        "skala",
+                        "Уролог с узкой специализацией на мужском здоровье и восстановлении функции мочеполовой системы."
+                )
         );
 
         adapter = new DoctorsAdapter(doctors);
@@ -53,13 +74,14 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
-        // Сразу отмечаем «Домой»
+        // Выставим выбранным пункт «Домой» на старте
         bottomNav.setSelectedItemId(R.id.nav_home);
 
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
-                return true; // уже здесь
+                // Уже здесь – ничего не делаем
+                return true;
             } else if (id == R.id.nav_profile) {
                 startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 finish();
@@ -69,20 +91,22 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    // Класс "Doctor"
+    // Класс "Doctor" теперь с полем описания
     private static class Doctor {
         String name;
         String specialty;
         String photoResName; // например, "billie" (без .png)
+        String description;  // новое поле для краткого описания
 
-        Doctor(String name, String specialty, String photoResName) {
+        Doctor(String name, String specialty, String photoResName, String description) {
             this.name = name;
             this.specialty = specialty;
             this.photoResName = photoResName;
+            this.description = description;
         }
     }
 
-    // Адаптер списка врачей
+    // Адаптер
     private class DoctorsAdapter extends RecyclerView.Adapter<DoctorsAdapter.DoctorViewHolder> {
 
         private final List<Doctor> doctors;
@@ -94,7 +118,8 @@ public class HomeActivity extends AppCompatActivity {
         @NonNull
         @Override
         public DoctorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.item_doctor, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_doctor, parent, false);
             return new DoctorViewHolder(view);
         }
 
@@ -104,6 +129,7 @@ public class HomeActivity extends AppCompatActivity {
 
             holder.tvDoctorName.setText(doctor.name);
             holder.tvSpecialty.setText(doctor.specialty);
+            holder.tvDescription.setText(doctor.description);
 
             // Загружаем фото из drawable по имени (например, billie.png → R.drawable.billie)
             int resId = getResources().getIdentifier(
@@ -117,17 +143,19 @@ public class HomeActivity extends AppCompatActivity {
                 holder.imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
             }
 
-            // При клике на карточку: либо запись, либо управление имеющейся записью
+            // При нажатии на карточку врача: если есть активная запись – управление, иначе запись
             holder.container.setOnClickListener(v -> {
                 AppointmentManager.Appointment existing =
                         AppointmentManager.getInstance().getAppointmentForDoctor(doctor.name);
                 if (existing == null) {
+                    // Переходим к выбору даты/времени (новая запись)
                     Intent intent = new Intent(HomeActivity.this, AppointmentActivity.class);
                     intent.putExtra("doctor_name", doctor.name);
                     intent.putExtra("doctor_specialty", doctor.specialty);
                     intent.putExtra("doctor_photo", doctor.photoResName + ".png");
                     startActivity(intent);
                 } else {
+                    // Переходим в экран управления существующей записью
                     Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
                     intent.putExtra("doctor_name", doctor.name);
                     intent.putExtra("doctor_specialty", doctor.specialty);
@@ -137,7 +165,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
 
-            // Кнопка «Записаться» всегда ведёт к созданию новой записи (если её нет)
+            // Кнопка «Записаться» всегда пытается создать новую запись
             holder.btnBook.setOnClickListener(v -> {
                 AppointmentManager.Appointment existing =
                         AppointmentManager.getInstance().getAppointmentForDoctor(doctor.name);
@@ -148,7 +176,6 @@ public class HomeActivity extends AppCompatActivity {
                     intent.putExtra("doctor_photo", doctor.photoResName + ".png");
                     startActivity(intent);
                 } else {
-                    // Если запись уже есть, переходим в ManageAppointment
                     Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
                     intent.putExtra("doctor_name", doctor.name);
                     intent.putExtra("doctor_specialty", doctor.specialty);
@@ -167,7 +194,7 @@ public class HomeActivity extends AppCompatActivity {
         class DoctorViewHolder extends RecyclerView.ViewHolder {
             View container;
             ImageView imgDoctorPhoto;
-            TextView tvDoctorName, tvSpecialty, tvAbout;
+            TextView tvDoctorName, tvSpecialty, tvDescription;
             Button btnBook;
 
             DoctorViewHolder(@NonNull View itemView) {
@@ -176,7 +203,7 @@ public class HomeActivity extends AppCompatActivity {
                 imgDoctorPhoto  = itemView.findViewById(R.id.imgDoctorPhoto);
                 tvDoctorName    = itemView.findViewById(R.id.tvDoctorName);
                 tvSpecialty     = itemView.findViewById(R.id.tvSpecialty);
-                tvAbout         = itemView.findViewById(R.id.tvAboutDoctor);
+                tvDescription   = itemView.findViewById(R.id.tvDescription);
                 btnBook         = itemView.findViewById(R.id.btnBook);
             }
         }
