@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "730736993960",
+    "project_id": "medhub-a4807",
+    "storage_bucket": "medhub-a4807.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730736993960:android:8f8b75abb4ff78c957849d",
+        "android_client_info": {
+          "package_name": "com.raven.clinic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU7mpKlti_pVduiT3wkWqK2rN9yBS0X_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.raven.clinic">
 
+    <!-- 1) Разрешение на интернет для работы с Firebase -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -46,6 +49,13 @@
             android:name=".ProfileActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ManageAppointmentActivity"
+            android:exported="false" />
+
     </application>
 </manifest>
-

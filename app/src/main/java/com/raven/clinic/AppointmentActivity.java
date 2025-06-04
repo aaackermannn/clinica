@@ -2,6 +2,7 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;  // <— импорт для использования View.GONE
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -14,25 +15,39 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AppointmentActivity extends AppCompatActivity {
 
     private ImageButton btnBack;
     private ImageView imgDoctorPhoto;
-    private TextView tvDoctorName, tvSpecialty;
+    private TextView tvDoctorName, tvSpecialty, tvAbout;
     private RadioGroup rgDateTimeOptions;
     private Button btnConfirm;
 
     private String doctorName, doctorSpecialty, doctorPhoto;
-    private String skipDateTime; // Если переходим с ManageAppointment, то этот слот нужно скрыть
+    private String skipDateTime; // Если переходим с ManageAppointment
+    private String doctorAbout;
+
+    // Firebase
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
+
+        // Инициализируем Firebase
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         btnBack = findViewById(R.id.btnBack);
         imgDoctorPhoto = findViewById(R.id.imgAppointmentDoctorPhoto);
@@ -47,22 +62,32 @@ public class AppointmentActivity extends AppCompatActivity {
         doctorSpecialty = intent.getStringExtra("doctor_specialty");
         doctorPhoto     = intent.getStringExtra("doctor_photo");
         skipDateTime    = intent.getStringExtra("skip_date_time"); // может быть null
+        doctorAbout     = intent.getStringExtra("doctor_about");    // может быть null
 
-        // Заполняем текст и фото врача
+        // Заполняем текст, фото, описание врача
         tvDoctorName.setText(doctorName);
         tvSpecialty.setText(doctorSpecialty);
-        int resId = getResources().getIdentifier(
+        int resIdPhoto = getResources().getIdentifier(
                 doctorPhoto.replace(".png", ""),
                 "drawable",
                 getPackageName()
         );
-        if (resId != 0) {
-            imgDoctorPhoto.setImageResource(resId);
+        if (resIdPhoto != 0) {
+            imgDoctorPhoto.setImageResource(resIdPhoto);
         } else {
             imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
         }
 
-        // Доступные варианты слотов (жёстко прописаны, но в будущем можно вытянуть из БД)
+        // Если пришло описание «about», отображаем TextView, иначе скрываем
+        tvAbout = findViewById(R.id.tvAboutDoctor);
+        if (doctorAbout != null) {
+            tvAbout.setText(doctorAbout);
+            tvAbout.setVisibility(View.VISIBLE);
+        } else {
+            tvAbout.setVisibility(View.GONE);
+        }
+
+        // Доступные варианты слотов (жёстко прописаны)
         List<String> allSlots = new ArrayList<>();
         allSlots.add("30 июня 2025, 09:00");
         allSlots.add("01 июля 2025, 11:30");
@@ -73,14 +98,14 @@ public class AppointmentActivity extends AppCompatActivity {
             allSlots.remove(skipDateTime);
         }
 
-        // Теперь динамически заполняем радиокнопки
+        // Динамически заполняем радиокнопки
         rgDateTimeOptions.removeAllViews();
         for (String slot : allSlots) {
             RadioButton rb = new RadioButton(this);
             rb.setText(slot);
             rb.setTextColor(getResources().getColor(R.color.white));
             rb.setButtonTintList(getResources().getColorStateList(R.color.primary));
-            // Нужны отступы:
+            // Отступы:
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -101,24 +126,44 @@ public class AppointmentActivity extends AppCompatActivity {
             RadioButton selectedRb = findViewById(checkedId);
             String dateTime = selectedRb.getText().toString();
 
-            // Сохраняем новую запись
-            AppointmentManager.Appointment appt = new AppointmentManager.Appointment(
-                    doctorName, doctorSpecialty, dateTime, doctorPhoto
-            );
-            AppointmentManager.getInstance().addOrUpdateAppointment(appt);
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user == null) {
+                Toast.makeText(this, "Сначала войдите в учётную запись", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String uid = user.getUid();
 
-            // Переходим на ConfirmationActivity
-            Intent i = new Intent(AppointmentActivity.this, ConfirmationActivity.class);
-            i.putExtra("doctor_name", doctorName);
-            i.putExtra("doctor_specialty", doctorSpecialty);
-            i.putExtra("doctor_photo", doctorPhoto);
-            i.putExtra("date_time", dateTime);
-            startActivity(i);
-            finish();
+            // Подготовим данные для записи
+            Map<String, Object> apptMap = new HashMap<>();
+            apptMap.put("doctorName", doctorName);
+            apptMap.put("specialty", doctorSpecialty);
+            apptMap.put("dateTime", dateTime);
+            apptMap.put("doctorPhoto", doctorPhoto);
+
+            // Сохраняем новую запись в Firestore → appointments/{uid}/user_appointments
+            db.collection("appointments")
+                    .document(uid)
+                    .collection("user_appointments")
+                    .document(doctorName) // имя врача как ключ
+                    .set(apptMap)
+                    .addOnSuccessListener(aVoid -> {
+                        // Переходим на ConfirmationActivity
+                        Intent i = new Intent(AppointmentActivity.this, ConfirmationActivity.class);
+                        i.putExtra("doctor_name", doctorName);
+                        i.putExtra("doctor_specialty", doctorSpecialty);
+                        i.putExtra("doctor_photo", doctorPhoto);
+                        i.putExtra("date_time", dateTime);
+                        startActivity(i);
+                        finish();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, "Не удалось сохранить запись: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                    );
         });
 
         // BottomNav
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.getMenu().findItem(R.id.nav_home).setChecked(true);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -140,10 +185,3 @@ public class AppointmentActivity extends AppCompatActivity {
         return Math.round(dp * density);
     }
 }
-
-
-
-
-
-
-

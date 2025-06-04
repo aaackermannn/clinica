@@ -14,7 +14,7 @@
         android:paddingTop="48dp"
         android:paddingBottom="16dp">
 
-        <!-- Логотип MedHub (точно на том же месте, что и на экране входа) -->
+        <!-- Логотип MedHub (в том же месте, что и на экране входа) -->
         <ImageView
             android:id="@+id/imgLogoSignUp"
             android:layout_width="150dp"
@@ -24,7 +24,7 @@
             android:contentDescription="Логотип MedHub"
             android:layout_marginBottom="32dp" />
 
-        <!-- Электронная почта -->
+        <!-- Поле «Электронная почта» -->
         <EditText
             android:id="@+id/editTextSignUpEmail"
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Пароль -->
+        <!-- Поле «Пароль» -->
         <EditText
             android:id="@+id/editTextSignUpPassword"
             android:layout_width="match_parent"
@@ -50,13 +50,26 @@
             android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Подтвердите пароль -->
+        <!-- Поле «Подтвердите пароль» -->
         <EditText
             android:id="@+id/editTextSignUpConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Подтвердите пароль"
             android:inputType="textPassword"
+            android:background="@drawable/rounded_edittext"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Поле «Ваш никнейм» -->
+        <EditText
+            android:id="@+id/editTextNickname"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Ваш никнейм"
+            android:inputType="textPersonName"
             android:background="@drawable/rounded_edittext"
             android:textColor="@color/white"
             android:textColorHint="@color/light_gray"
@@ -84,8 +97,3 @@
             android:layout_marginTop="8dp" />
     </LinearLayout>
 </ScrollView>
-
-
-
-
-

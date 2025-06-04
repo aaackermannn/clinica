@@ -81,6 +81,17 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp" />
 
+            <!-- Текст "О враче" (если передано из Intent) -->
+            <TextView
+                android:id="@+id/tvAboutDoctor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Описание врача"
+                android:textSize="14sp"
+                android:textColor="@color/light_gray"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
+
             <!-- Радиокнопки для трёх вариантов -->
             <RadioGroup
                 android:id="@+id/rgDateTimeOptions"
@@ -137,7 +148,3 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
-
-
-
-

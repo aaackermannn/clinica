@@ -50,8 +50,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <!-- Переименовали tvFullName в tvNickname -->
                 <TextView
-                    android:id="@+id/tvFullName"
+                    android:id="@+id/tvNickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Иван Иванов"
@@ -71,6 +72,66 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Кнопка «Сменить пароль» -->
+    <LinearLayout
+        android:id="@+id/btnChangePassword"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@drawable/rounded_search_bg"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_preferences"
+            app:tint="@color/gray"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сменить пароль"
+            android:textSize="16sp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <!-- Кнопка «Справка» -->
+    <LinearLayout
+        android:id="@+id/btnHelp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@drawable/rounded_search_bg"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_info_details"
+            app:tint="@color/gray"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Справка"
+            android:textSize="16sp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
     <!-- Кнопка «Выйти» -->
     <Button
         android:id="@+id/btnLogout"
@@ -89,7 +150,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Bottom Navigation — без отступов, match_parent во всю ширину -->
+    <!-- Bottom Navigation — во всю ширину экрана -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -98,4 +159,5 @@
         app:itemIconTint="@color/bottom_nav_icon_tint"
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
+
 </LinearLayout>

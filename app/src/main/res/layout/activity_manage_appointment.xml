@@ -42,6 +42,18 @@
         android:gravity="center"
         android:layout_marginBottom="8dp" />
 
+    <!-- Поле "О враче" при наличии -->
+    <TextView
+        android:id="@+id/tvManageAbout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Описание врача"
+        android:textSize="14sp"
+        android:textColor="@color/light_gray"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
     <!-- Действующая дата/время -->
     <TextView
         android:id="@+id/tvManageCurrentDateTime"
@@ -93,4 +105,3 @@
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
-

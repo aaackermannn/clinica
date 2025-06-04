@@ -12,7 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyAppointmentsActivity extends AppCompatActivity {
@@ -21,29 +27,67 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     private TextView tvNoActiveAppointments;
     private ActiveAppointmentsAdapter adapter;
 
+    // Firebase
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
+    private List<AppointmentManager.Appointment> appointmentList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_appointments);
 
+        // Инициализируем Firebase
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         rvActiveAppointments   = findViewById(R.id.rvActiveAppointments);
         tvNoActiveAppointments = findViewById(R.id.tvNoActiveAppointments);
 
-        List<AppointmentManager.Appointment> active =
-                AppointmentManager.getInstance().getAllAppointments();
-
-        if (active == null || active.isEmpty()) {
-            tvNoActiveAppointments.setVisibility(View.VISIBLE);
-            rvActiveAppointments.setVisibility(View.GONE);
-        } else {
-            tvNoActiveAppointments.setVisibility(View.GONE);
-            rvActiveAppointments.setVisibility(View.VISIBLE);
-            rvActiveAppointments.setLayoutManager(new LinearLayoutManager(this));
-            adapter = new ActiveAppointmentsAdapter(active);
-            rvActiveAppointments.setAdapter(adapter);
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            // Если не залогинен — возвращаемся на Home
+            startActivity(new Intent(MyAppointmentsActivity.this, HomeActivity.class));
+            finish();
+            return;
         }
 
+        String uid = user.getUid();
+        // Загружаем активные записи из Firestore
+        db.collection("appointments")
+                .document(uid)
+                .collection("user_appointments")
+                .get()
+                .addOnSuccessListener((QuerySnapshot snapshot) -> {
+                    if (snapshot.isEmpty()) {
+                        tvNoActiveAppointments.setVisibility(View.VISIBLE);
+                        rvActiveAppointments.setVisibility(View.GONE);
+                    } else {
+                        tvNoActiveAppointments.setVisibility(View.GONE);
+                        rvActiveAppointments.setVisibility(View.VISIBLE);
+                        for (QueryDocumentSnapshot doc : snapshot) {
+                            String docName    = doc.getString("doctorName");
+                            String specialty  = doc.getString("specialty");
+                            String dateTime   = doc.getString("dateTime");
+                            String photo      = doc.getString("doctorPhoto");
+                            AppointmentManager.Appointment appt =
+                                    new AppointmentManager.Appointment(docName, specialty, dateTime, photo);
+                            appointmentList.add(appt);
+                        }
+                        rvActiveAppointments.setLayoutManager(new LinearLayoutManager(this));
+                        adapter = new ActiveAppointmentsAdapter(appointmentList);
+                        rvActiveAppointments.setAdapter(adapter);
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(MyAppointmentsActivity.this,
+                                "Ошибка загрузки записей: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show()
+                );
+
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.getMenu().findItem(R.id.nav_home).setChecked(true);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -99,17 +143,29 @@ public class MyAppointmentsActivity extends AppCompatActivity {
             }
 
             holder.btnMyCancel.setOnClickListener(v -> {
-                AppointmentManager.getInstance().removeAppointment(appt.doctorName);
-                appointments.remove(position);
-                notifyItemRemoved(position);
-                Toast.makeText(MyAppointmentsActivity.this,
-                        "Запись отменена", Toast.LENGTH_SHORT).show();
-
-                // Если больше нет записей, переключаемся на пустой экран
-                if (appointments.isEmpty()) {
-                    tvNoActiveAppointments.setVisibility(View.VISIBLE);
-                    rvActiveAppointments.setVisibility(View.GONE);
-                }
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user == null) return;
+                String uid = user.getUid();
+                // Удаляем запись из Firestore
+                db.collection("appointments")
+                        .document(uid)
+                        .collection("user_appointments")
+                        .document(appt.doctorName)
+                        .delete()
+                        .addOnSuccessListener(aVoid -> {
+                            appointments.remove(position);
+                            notifyItemRemoved(position);
+                            Toast.makeText(MyAppointmentsActivity.this,
+                                    "Запись отменена", Toast.LENGTH_SHORT).show();
+                            if (appointments.isEmpty()) {
+                                tvNoActiveAppointments.setVisibility(View.VISIBLE);
+                                rvActiveAppointments.setVisibility(View.GONE);
+                            }
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(MyAppointmentsActivity.this,
+                                        "Не удалось отменить: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                        );
             });
         }
 

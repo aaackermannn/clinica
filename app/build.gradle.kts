@@ -1,9 +1,6 @@
-// app/build.gradle.kts
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    // Плагин Google‑Services (Firebase)
     id("com.google.gms.google-services")
 }
 
@@ -30,7 +27,6 @@ android {
             )
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -41,7 +37,7 @@ android {
 }
 
 dependencies {
-    // AndroidX и Material
+    // Core & UI
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -50,12 +46,20 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
-    // Firebase Auth
-    implementation("com.google.firebase:firebase-auth:22.1.0")
-    // (опционально) Core Analytics, если понадобится
-    implementation("com.google.firebase:firebase-core:21.1.1")
+    // Firebase BOM (единственная строка для управления версиями всех Firebase-библиотек)
+    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
 
+    // Firebase Authentication KTX
+    implementation("com.google.firebase:firebase-auth-ktx:21.1.0")
+    // Firestore KTX
+    implementation("com.google.firebase:firebase-firestore-ktx:24.7.0")
+    // Realtime Database KTX
+    implementation("com.google.firebase:firebase-database-ktx:20.2.2")
+    // Firebase BOM – управляет версиями всех Firebase-библиотек
+    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+    // Тесты
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
+// Плагин Google Services уже подключён в блоке plugins выше, поэтому дополнительный apply не нужен

@@ -14,7 +14,7 @@
         android:paddingTop="48dp"
         android:paddingBottom="16dp">
 
-        <!-- Логотип MedHub (центрирован по ширине) -->
+        <!-- Логотип MedHub -->
         <ImageView
             android:id="@+id/imgLogoLogin"
             android:layout_width="150dp"
@@ -24,7 +24,7 @@
             android:contentDescription="Логотип MedHub"
             android:layout_marginBottom="32dp" />
 
-        <!-- Электронная почта -->
+        <!-- Поле «Электронная почта» -->
         <EditText
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Пароль -->
+        <!-- Поле «Пароль» -->
         <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
             android:padding="12dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Кнопка «Войти с MedID» -->
+        <!-- Кнопка «Войти с MedID» -->
         <Button
             android:id="@+id/buttonLoginMedID"
             android:layout_width="match_parent"
@@ -69,13 +69,6 @@
             android:textColor="@color/primary"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp" />
+
     </LinearLayout>
 </ScrollView>
-
-
-
-
-
-
-
-
