@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +26,20 @@ public class MyAppointmentsActivity extends AppCompatActivity {
     private RecyclerView rvActiveAppointments;
     private TextView tvNoActiveAppointments;
     private ActiveAppointmentsAdapter adapter;
+    private List<AppointmentData> appointmentList = new ArrayList<>();
 
-    // Firebase
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-
-    private List<AppointmentManager.Appointment> appointmentList = new ArrayList<>();
+    private DatabaseReference dbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_appointments);
 
-        // Инициализируем Firebase
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        dbRef = FirebaseDatabase.getInstance().getReference();
 
-        rvActiveAppointments   = findViewById(R.id.rvActiveAppointments);
+        rvActiveAppointments = findViewById(R.id.rvActiveAppointments);
         tvNoActiveAppointments = findViewById(R.id.tvNoActiveAppointments);
 
         FirebaseUser user = mAuth.getCurrentUser();
@@ -54,31 +51,45 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         }
 
         String uid = user.getUid();
-        // Загружаем активные записи из Firestore
-        db.collection("appointments")
-                .document(uid)
-                .collection("user_appointments")
+        // Считываем все записи пользователя из /appointments/{uid}
+        dbRef.child("appointments")
+                .child(uid)
                 .get()
-                .addOnSuccessListener((QuerySnapshot snapshot) -> {
-                    if (snapshot.isEmpty()) {
+                .addOnSuccessListener(snapshot -> {
+                    if (!snapshot.exists() || !snapshot.hasChildren()) {
+                        // Нет активных записей
                         tvNoActiveAppointments.setVisibility(View.VISIBLE);
                         rvActiveAppointments.setVisibility(View.GONE);
-                    } else {
-                        tvNoActiveAppointments.setVisibility(View.GONE);
-                        rvActiveAppointments.setVisibility(View.VISIBLE);
-                        for (QueryDocumentSnapshot doc : snapshot) {
-                            String docName    = doc.getString("doctorName");
-                            String specialty  = doc.getString("specialty");
-                            String dateTime   = doc.getString("dateTime");
-                            String photo      = doc.getString("doctorPhoto");
-                            AppointmentManager.Appointment appt =
-                                    new AppointmentManager.Appointment(docName, specialty, dateTime, photo);
-                            appointmentList.add(appt);
-                        }
-                        rvActiveAppointments.setLayoutManager(new LinearLayoutManager(this));
-                        adapter = new ActiveAppointmentsAdapter(appointmentList);
-                        rvActiveAppointments.setAdapter(adapter);
+                        return;
                     }
+                    tvNoActiveAppointments.setVisibility(View.GONE);
+                    rvActiveAppointments.setVisibility(View.VISIBLE);
+
+                    // Проходим по каждой дочерней ноде
+                    for (DataSnapshot apptSnapshot : snapshot.getChildren()) {
+                        // apptSnapshot — это узел с пуш-ключом, внутри хранятся поля:
+                        //   doctorName, specialty, dateTime, doctorPhoto
+                        String doctorName = apptSnapshot.child("doctorName")
+                                .getValue(String.class);
+                        String specialty = apptSnapshot.child("specialty")
+                                .getValue(String.class);
+                        String dateTime  = apptSnapshot.child("dateTime")
+                                .getValue(String.class);
+                        String photo     = apptSnapshot.child("doctorPhoto")
+                                .getValue(String.class);
+
+                        // Если какое-то поле null (не должно), пропускаем
+                        if (doctorName == null || specialty == null || dateTime == null || photo == null) {
+                            continue;
+                        }
+
+                        appointmentList.add(new AppointmentData(doctorName, specialty, dateTime, photo));
+                    }
+
+                    // Настраиваем RecyclerView
+                    rvActiveAppointments.setLayoutManager(new LinearLayoutManager(this));
+                    adapter = new ActiveAppointmentsAdapter(appointmentList);
+                    rvActiveAppointments.setAdapter(adapter);
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(MyAppointmentsActivity.this,
@@ -103,13 +114,31 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         });
     }
 
-    // Адаптер для активных записей
+    // Модель данных для одной записи
+    public static class AppointmentData {
+        public String doctorName;
+        public String specialty;
+        public String dateTime;
+        public String doctorPhoto;
+
+        // Пустой конструктор нужен для DataSnapshot.getValue(AppointmentData.class)
+        public AppointmentData() { }
+
+        public AppointmentData(String doctorName, String specialty, String dateTime, String doctorPhoto) {
+            this.doctorName = doctorName;
+            this.specialty = specialty;
+            this.dateTime = dateTime;
+            this.doctorPhoto = doctorPhoto;
+        }
+    }
+
+    // Адаптер для RecyclerView
     private class ActiveAppointmentsAdapter
             extends RecyclerView.Adapter<ActiveAppointmentsAdapter.AppointmentViewHolder> {
 
-        private final List<AppointmentManager.Appointment> appointments;
+        private final List<AppointmentData> appointments;
 
-        ActiveAppointmentsAdapter(List<AppointmentManager.Appointment> appointments) {
+        ActiveAppointmentsAdapter(List<AppointmentData> appointments) {
             this.appointments = appointments;
         }
 
@@ -125,7 +154,7 @@ public class MyAppointmentsActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(
                 @NonNull AppointmentViewHolder holder, int position) {
-            AppointmentManager.Appointment appt = appointments.get(position);
+            AppointmentData appt = appointments.get(position);
 
             holder.tvDoctorName.setText(appt.doctorName);
             holder.tvSpecialty.setText(appt.specialty);
@@ -146,12 +175,19 @@ public class MyAppointmentsActivity extends AppCompatActivity {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user == null) return;
                 String uid = user.getUid();
-                // Удаляем запись из Firestore
-                db.collection("appointments")
-                        .document(uid)
-                        .collection("user_appointments")
-                        .document(appt.doctorName)
-                        .delete()
+
+                // Чтобы удалить, нужно найти тот же узел в RTDB. Поскольку мы не запоминали ключ push(),
+                // придёмся искать по doctorName/специальности/дате, либо переписывать логику
+                // и хранить сами ключи в appointmentList. Проще: в момент создания мы можем сохранять
+                // сразу объект AppointmentData вместе с его ключом. Но здесь приведён упрощённый подход:
+                // если ключ будет называться как doctorName.replaceAll("[.#$\\[\\]]", "_"), то:
+                String safeKey = appt.doctorName.replaceAll("[.#$\\[\\]]", "_");
+                // Иначе, если вы использовали push(), придётся сохранять сам ключ в AppointmentData.
+
+                dbRef.child("appointments")
+                        .child(uid)
+                        .child(safeKey)
+                        .removeValue()
                         .addOnSuccessListener(aVoid -> {
                             appointments.remove(position);
                             notifyItemRemoved(position);

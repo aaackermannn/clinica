@@ -2,7 +2,6 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,18 +10,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
-
-    private static final String TAG = "SignUpActivity";
 
     private EditText editTextSignUpEmail;
     private EditText editTextSignUpPassword;
@@ -39,7 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        // Инициализация Firebase
+        // Инициализация FirebaseAuth и Firestore
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -58,27 +56,22 @@ public class SignUpActivity extends AppCompatActivity {
             String confirm = editTextSignUpConfirmPassword.getText().toString().trim();
             String nickname = editTextNickname.getText().toString().trim();
 
-            // 1) Проверка, что все поля заполнены
             if (email.isEmpty() || password.isEmpty() || confirm.isEmpty() || nickname.isEmpty()) {
                 Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // 2) Проверка валидности email
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 editTextSignUpEmail.setError("Неверный формат email");
                 return;
             }
-
-            // 3) Проверка совпадения паролей
             if (!password.equals(confirm)) {
                 editTextSignUpConfirmPassword.setError("Пароли не совпадают");
                 return;
             }
-
-            // 4) Выводим Toast и Log перед запросом, чтобы видеть, что он запустился
-            Toast.makeText(this, "Пытаемся зарегистрировать пользователя...", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Регистрация: email=" + email + ", nickname=" + nickname);
+            if (password.length() < 6) {
+                editTextSignUpPassword.setError("Минимум 6 символов");
+                return;
+            }
 
             // Создание пользователя в FirebaseAuth
             auth.createUserWithEmailAndPassword(email, password)
@@ -88,9 +81,8 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = auth.getCurrentUser();
                             if (user != null) {
                                 String uid = user.getUid();
-                                Log.d(TAG, "FirebaseAuth: пользователь создан, uid=" + uid);
 
-                                // Сохраняем дополнительную информацию (никнейм и email) в Firestore
+                                // Сохраняем email и nickname в Firestore
                                 Map<String, Object> userMap = new HashMap<>();
                                 userMap.put("email", email);
                                 userMap.put("nickname", nickname);
@@ -99,34 +91,20 @@ public class SignUpActivity extends AppCompatActivity {
                                         .document(uid)
                                         .set(userMap)
                                         .addOnSuccessListener(aVoid -> {
-                                            Log.d(TAG, "Firestore: данные пользователя успешно сохранены");
-                                            Toast.makeText(SignUpActivity.this,
-                                                    "Регистрация прошла успешно", Toast.LENGTH_SHORT).show();
-                                            // Переход на экран входа
-                                            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                                            finish();
+                                            // После успешного сохранения показываем модальный диалог
+                                            showRegistrationSuccessDialog();
                                         })
                                         .addOnFailureListener(e -> {
-                                            Log.e(TAG, "Ошибка при сохранении данных в Firestore", e);
                                             Toast.makeText(SignUpActivity.this,
                                                     "Ошибка сохранения данных: " + e.getMessage(),
                                                     Toast.LENGTH_SHORT).show();
                                         });
-                            } else {
-                                // Непредвиденный случай: user == null
-                                Log.e(TAG, "FirebaseAuth: task.isSuccessful(), но user == null");
-                                Toast.makeText(SignUpActivity.this,
-                                        "Не удалось получить данные нового пользователя",
-                                        Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             // Ошибка при регистрации
-                            Exception e = task.getException();
-                            String message = (e != null) ? e.getMessage() : "Неизвестная ошибка";
-                            Log.e(TAG, "Ошибка при регистрации:", e);
                             Toast.makeText(SignUpActivity.this,
-                                    "Ошибка при регистрации: " + message,
-                                    Toast.LENGTH_LONG).show();
+                                    "Ошибка при регистрации: " + task.getException().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
         });
@@ -136,5 +114,24 @@ public class SignUpActivity extends AppCompatActivity {
             startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             finish();
         });
+    }
+
+    /**
+     * Показывает модальное окно «Регистрация прошла успешно»
+     */
+    private void showRegistrationSuccessDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        RegistrationSuccessDialogFragment dialog = new RegistrationSuccessDialogFragment();
+        dialog.setCancelable(true);
+        dialog.show(fm, "dialog_registration_success");
+    }
+
+    /**
+     * Этот метод вызывается из RegistrationSuccessDialogFragment после нажатия «Войти» или закрытия диалога.
+     * Переходит на экран авторизации и закрывает текущую Activity.
+     */
+    public void navigateToLoginAfterDialog() {
+        startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+        finish();
     }
 }

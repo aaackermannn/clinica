@@ -2,7 +2,7 @@ package com.raven.clinic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;  // <— импорт для использования View.GONE
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,11 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AppointmentActivity extends AppCompatActivity {
@@ -38,7 +39,8 @@ public class AppointmentActivity extends AppCompatActivity {
 
     // Firebase
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
+    // Теперь Realtime Database
+    private DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class AppointmentActivity extends AppCompatActivity {
 
         // Инициализируем Firebase
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        database = FirebaseDatabase.getInstance().getReference();
 
         btnBack = findViewById(R.id.btnBack);
         imgDoctorPhoto = findViewById(R.id.imgAppointmentDoctorPhoto);
@@ -133,6 +135,9 @@ public class AppointmentActivity extends AppCompatActivity {
             }
             String uid = user.getUid();
 
+            // Формируем «безопасный» ключ врача для RTDB:
+            String safeKey = doctorName.replaceAll("[.#$\\[\\]]", "_");
+
             // Подготовим данные для записи
             Map<String, Object> apptMap = new HashMap<>();
             apptMap.put("doctorName", doctorName);
@@ -140,12 +145,11 @@ public class AppointmentActivity extends AppCompatActivity {
             apptMap.put("dateTime", dateTime);
             apptMap.put("doctorPhoto", doctorPhoto);
 
-            // Сохраняем новую запись в Firestore → appointments/{uid}/user_appointments
-            db.collection("appointments")
-                    .document(uid)
-                    .collection("user_appointments")
-                    .document(doctorName) // имя врача как ключ
-                    .set(apptMap)
+            // Сохраняем новую запись в Realtime Database → appointments/{uid}/{safeKey}
+            database.child("appointments")
+                    .child(uid)
+                    .child(safeKey)
+                    .setValue(apptMap)
                     .addOnSuccessListener(aVoid -> {
                         // Переходим на ConfirmationActivity
                         Intent i = new Intent(AppointmentActivity.this, ConfirmationActivity.class);

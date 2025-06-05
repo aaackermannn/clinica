@@ -8,20 +8,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView imgUserAvatar;
     private TextView tvNickname, tvEmail;
-    private LinearLayout btnChangePassword, btnHelp;
+    private LinearLayout btnChangePassword;
     private Button btnLogout;
 
     private FirebaseAuth auth;
@@ -32,7 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Инициализация Firebase
+        // Инициализация FirebaseAuth и Firestore
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -41,7 +39,6 @@ public class ProfileActivity extends AppCompatActivity {
         tvNickname    = findViewById(R.id.tvNickname);
         tvEmail       = findViewById(R.id.tvEmail);
         btnChangePassword = findViewById(R.id.btnChangePassword);
-        btnHelp       = findViewById(R.id.btnHelp);
         btnLogout     = findViewById(R.id.btnLogout);
 
         // Устанавливаем аватар (по желанию можно заменить)
@@ -57,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         String uid = currentUser.getUid();
-        // Запросим данные из Firestore
+        // Запрашиваем данные из Firestore
         db.collection("users")
                 .document(uid)
                 .get()
@@ -69,18 +66,15 @@ public class ProfileActivity extends AppCompatActivity {
                         tvNickname.setText(nickname != null ? nickname : "—");
                     }
                 })
-                .addOnFailureListener(e -> Toast.makeText(ProfileActivity.this,
-                        "Ошибка загрузки профиля: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e ->
+                        Toast.makeText(ProfileActivity.this,
+                                "Ошибка загрузки профиля: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show()
+                );
 
         // Обработчик клика «Сменить пароль»
         btnChangePassword.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, ChangePasswordActivity.class));
-        });
-
-        // Обработчик клика «Справка» (можете реализовать нужное действие)
-        btnHelp.setOnClickListener(v -> {
-            Toast.makeText(ProfileActivity.this, "Здесь откроется справка", Toast.LENGTH_SHORT).show();
         });
 
         // Обработчик кнопки «Выйти»

@@ -18,31 +18,40 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * HomeActivity показывает список врачей и позволяет записаться к выбранному врачу.
+ * При клике на врача проверяется наличие записи в Firebase Realtime Database:
+ *   – если запись найдена → ManageAppointmentActivity;
+ *   – если нет        → AppointmentActivity.
+ */
 public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView rvDoctors;
     private DoctorsAdapter adapter;
     private Button btnMyAppointments;
 
-    // Firebase
+    // Firebase Auth
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
+    // Realtime Database
+    private DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Инициализируем Firebase
+        // Инициализируем FirebaseAuth и Realtime Database
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        database = FirebaseDatabase.getInstance().getReference();
 
         btnMyAppointments = findViewById(R.id.btnMyAppointments);
         btnMyAppointments.setOnClickListener(v -> {
@@ -52,7 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         rvDoctors = findViewById(R.id.rvDoctors);
         rvDoctors.setLayoutManager(new LinearLayoutManager(this));
 
-        // Четыре врача с их фотографиями и описаниями
+        // Четыре врача с их фотографиями и описаниями (жёстко прописано)
         List<Doctor> doctors = Arrays.asList(
                 new Doctor("Billi Ailish", "Педиатр", "billie",
                         "Билли Айлеш — опытный педиатр с 10-летним стажем, специализируется на детских вирусных заболеваниях."),
@@ -78,7 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
-                return true; // уже здесь
+                return true; // Уже здесь
             } else if (id == R.id.nav_profile) {
                 startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 return true;
@@ -87,12 +96,12 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    // Класс "Doctor"
+    // Внутренний класс Doctor — модель данных врача
     private static class Doctor {
         String name;
         String specialty;
         String photoResName; // например, "billie" (без .png)
-        String about;       // описание «О враче»
+        String about;        // описание «О враче»
 
         Doctor(String name, String specialty, String photoResName, String about) {
             this.name = name;
@@ -102,7 +111,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // Адаптер
+    // Адаптер для RecyclerView
     private class DoctorsAdapter extends RecyclerView.Adapter<DoctorsAdapter.DoctorViewHolder> {
 
         private final List<Doctor> doctors;
@@ -139,6 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                 holder.imgDoctorPhoto.setImageResource(R.drawable.doctor_placeholder);
             }
 
+            // При клике на карточку врача
             holder.container.setOnClickListener(v -> {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user == null) {
@@ -148,41 +158,49 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
                 String uid = user.getUid();
-                // Проверяем, есть ли уже запись к этому врачу
-                db.collection("appointments")
-                        .document(uid)
-                        .collection("user_appointments")
-                        .whereEqualTo("doctorName", doctor.name)
-                        .get()
-                        .addOnSuccessListener(querySnapshot -> {
-                            if (querySnapshot.isEmpty()) {
-                                // Если записи нет, переходим на запись
-                                Intent intent = new Intent(HomeActivity.this, AppointmentActivity.class);
-                                intent.putExtra("doctor_name", doctor.name);
-                                intent.putExtra("doctor_specialty", doctor.specialty);
-                                intent.putExtra("doctor_photo", doctor.photoResName + ".png");
-                                intent.putExtra("doctor_about", doctor.about);
-                                startActivity(intent);
-                            } else {
-                                // Если запись есть, открываем экран управления записью
-                                String existingDateTime = querySnapshot.getDocuments()
-                                        .get(0).getString("dateTime");
-                                Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
-                                intent.putExtra("doctor_name", doctor.name);
-                                intent.putExtra("doctor_specialty", doctor.specialty);
-                                intent.putExtra("doctor_photo", doctor.photoResName + ".png");
-                                intent.putExtra("current_date_time", existingDateTime);
-                                intent.putExtra("doctor_about", doctor.about);
-                                startActivity(intent);
+                // Получаем «безопасный» ключ врача для RTDB:
+                String safeKey = doctor.name.replaceAll("[.#$\\[\\]]", "_");
+
+                // Проверяем, есть ли запись в Realtime Database по пути appointments/{uid}/{safeKey}
+                database.child("appointments")
+                        .child(uid)
+                        .child(safeKey)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    // Если запись найдена, открываем ManageAppointmentActivity
+                                    String existingDateTime = snapshot.child("dateTime")
+                                            .getValue(String.class);
+
+                                    Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
+                                    intent.putExtra("doctor_name", doctor.name);
+                                    intent.putExtra("doctor_specialty", doctor.specialty);
+                                    intent.putExtra("doctor_photo", doctor.photoResName + ".png");
+                                    intent.putExtra("current_date_time", existingDateTime);
+                                    intent.putExtra("doctor_about", doctor.about);
+                                    startActivity(intent);
+                                } else {
+                                    // Если записи нет — открываем экран записи (AppointmentActivity)
+                                    Intent intent = new Intent(HomeActivity.this, AppointmentActivity.class);
+                                    intent.putExtra("doctor_name", doctor.name);
+                                    intent.putExtra("doctor_specialty", doctor.specialty);
+                                    intent.putExtra("doctor_photo", doctor.photoResName + ".png");
+                                    intent.putExtra("doctor_about", doctor.about);
+                                    startActivity(intent);
+                                }
                             }
-                        })
-                        .addOnFailureListener(e ->
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
                                 Toast.makeText(HomeActivity.this,
-                                        "Не удалось проверить запись: " + e.getMessage(),
-                                        Toast.LENGTH_SHORT).show());
+                                        "Ошибка проверки записи: " + error.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
             });
 
-            // Явная кнопка «Записаться»
+            // При клике на кнопку «Записаться» внутри карточки
             holder.btnBook.setOnClickListener(v -> {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user == null) {
@@ -192,32 +210,42 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
                 String uid = user.getUid();
-                // Проверяем наличие записи
-                db.collection("appointments")
-                        .document(uid)
-                        .collection("user_appointments")
-                        .whereEqualTo("doctorName", doctor.name)
-                        .get()
-                        .addOnSuccessListener(querySnapshot -> {
-                            if (querySnapshot.isEmpty()) {
-                                // Нет записи — переносим на AppointmentActivity
-                                Intent intent = new Intent(HomeActivity.this, AppointmentActivity.class);
-                                intent.putExtra("doctor_name", doctor.name);
-                                intent.putExtra("doctor_specialty", doctor.specialty);
-                                intent.putExtra("doctor_photo", doctor.photoResName + ".png");
-                                intent.putExtra("doctor_about", doctor.about);
-                                startActivity(intent);
-                            } else {
-                                // Есть запись — ManageAppointmentActivity
-                                String existingDateTime = querySnapshot.getDocuments()
-                                        .get(0).getString("dateTime");
-                                Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
-                                intent.putExtra("doctor_name", doctor.name);
-                                intent.putExtra("doctor_specialty", doctor.specialty);
-                                intent.putExtra("doctor_photo", doctor.photoResName + ".png");
-                                intent.putExtra("current_date_time", existingDateTime);
-                                intent.putExtra("doctor_about", doctor.about);
-                                startActivity(intent);
+                String safeKey = doctor.name.replaceAll("[.#$\\[\\]]", "_");
+
+                database.child("appointments")
+                        .child(uid)
+                        .child(safeKey)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    // Если запись уже есть — ManageAppointmentActivity
+                                    String existingDateTime = snapshot.child("dateTime")
+                                            .getValue(String.class);
+
+                                    Intent intent = new Intent(HomeActivity.this, ManageAppointmentActivity.class);
+                                    intent.putExtra("doctor_name", doctor.name);
+                                    intent.putExtra("doctor_specialty", doctor.specialty);
+                                    intent.putExtra("doctor_photo", doctor.photoResName + ".png");
+                                    intent.putExtra("current_date_time", existingDateTime);
+                                    intent.putExtra("doctor_about", doctor.about);
+                                    startActivity(intent);
+                                } else {
+                                    // Иначе — AppointmentActivity
+                                    Intent intent = new Intent(HomeActivity.this, AppointmentActivity.class);
+                                    intent.putExtra("doctor_name", doctor.name);
+                                    intent.putExtra("doctor_specialty", doctor.specialty);
+                                    intent.putExtra("doctor_photo", doctor.photoResName + ".png");
+                                    intent.putExtra("doctor_about", doctor.about);
+                                    startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(HomeActivity.this,
+                                        "Ошибка проверки записи: " + error.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
                             }
                         });
             });
@@ -236,12 +264,12 @@ public class HomeActivity extends AppCompatActivity {
 
             DoctorViewHolder(@NonNull View itemView) {
                 super(itemView);
-                container       = itemView.findViewById(R.id.container_doctor);
-                imgDoctorPhoto  = itemView.findViewById(R.id.imgDoctorPhoto);
-                tvDoctorName    = itemView.findViewById(R.id.tvDoctorName);
-                tvSpecialty     = itemView.findViewById(R.id.tvSpecialty);
-                tvAbout         = itemView.findViewById(R.id.tvAbout);
-                btnBook         = itemView.findViewById(R.id.btnBook);
+                container = itemView.findViewById(R.id.container_doctor);
+                imgDoctorPhoto = itemView.findViewById(R.id.imgDoctorPhoto);
+                tvDoctorName = itemView.findViewById(R.id.tvDoctorName);
+                tvSpecialty = itemView.findViewById(R.id.tvSpecialty);
+                tvAbout = itemView.findViewById(R.id.tvAbout);
+                btnBook = itemView.findViewById(R.id.btnBook);
             }
         }
     }
