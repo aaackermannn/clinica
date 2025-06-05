@@ -8,13 +8,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -75,14 +72,19 @@ public class SignUpActivity extends AppCompatActivity {
 
             // Создание пользователя в FirebaseAuth
             auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {
-                            // Успешно зарегистрирован
+                    .addOnCompleteListener(this, authTask -> {
+                        if (authTask.isSuccessful()) {
+                            // Регистрация в FirebaseAuth прошла успешно
                             FirebaseUser user = auth.getCurrentUser();
                             if (user != null) {
                                 String uid = user.getUid();
 
-                                // Сохраняем email и nickname в Firestore
+                                // Переходим на главный экран ДО записи данных в Firestore
+                                Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+                                startActivity(intent);
+                                finish();
+
+                                // Сохраняем email и nickname в Firestore (в фоне)
                                 Map<String, Object> userMap = new HashMap<>();
                                 userMap.put("email", email);
                                 userMap.put("nickname", nickname);
@@ -90,20 +92,16 @@ public class SignUpActivity extends AppCompatActivity {
                                 db.collection("users")
                                         .document(uid)
                                         .set(userMap)
-                                        .addOnSuccessListener(aVoid -> {
-                                            // После успешного сохранения показываем модальный диалог
-                                            showRegistrationSuccessDialog();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Toast.makeText(SignUpActivity.this,
-                                                    "Ошибка сохранения данных: " + e.getMessage(),
-                                                    Toast.LENGTH_SHORT).show();
-                                        });
+                                        .addOnFailureListener(e ->
+                                                Toast.makeText(SignUpActivity.this,
+                                                        "Ошибка сохранения профиля: " + e.getMessage(),
+                                                        Toast.LENGTH_SHORT).show()
+                                        );
                             }
                         } else {
                             // Ошибка при регистрации
                             Toast.makeText(SignUpActivity.this,
-                                    "Ошибка при регистрации: " + task.getException().getMessage(),
+                                    "Ошибка при регистрации: " + authTask.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -114,24 +112,5 @@ public class SignUpActivity extends AppCompatActivity {
             startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             finish();
         });
-    }
-
-    /**
-     * Показывает модальное окно «Регистрация прошла успешно»
-     */
-    private void showRegistrationSuccessDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        RegistrationSuccessDialogFragment dialog = new RegistrationSuccessDialogFragment();
-        dialog.setCancelable(true);
-        dialog.show(fm, "dialog_registration_success");
-    }
-
-    /**
-     * Этот метод вызывается из RegistrationSuccessDialogFragment после нажатия «Войти» или закрытия диалога.
-     * Переходит на экран авторизации и закрывает текущую Activity.
-     */
-    public void navigateToLoginAfterDialog() {
-        startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-        finish();
     }
 }

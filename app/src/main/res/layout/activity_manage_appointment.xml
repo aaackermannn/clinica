@@ -75,18 +75,6 @@
         android:textColor="@color/white"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="12dp" />
-
-    <!-- Кнопка «Отменить запись» -->
-    <Button
-        android:id="@+id/btnCancelExisting"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Отменить запись"
-        android:background="@drawable/rounded_button"
-        android:textColor="@color/white"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp" />
 
     <!-- Заполнитель, чтобы BottomNav был внизу -->
