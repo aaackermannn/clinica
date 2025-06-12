@@ -64,34 +64,6 @@
 5. Запустить
 Выберите эмулятор или устройство и нажмите ▶ Run.
 
-📂 **Структура проекта**
-
-app/
-├─ src/main/
-│  ├─ java/com/raven/clinic/
-│  │  ├─ activities/
-│  │  │  ├ LoginActivity.java
-│  │  │  ├ SignUpActivity.java
-│  │  │  ├ HomeActivity.java
-│  │  │  ├ DoctorsActivity.java
-│  │  │  ├ AppointmentActivity.java
-│  │  │  ├ ManageAppointmentActivity.java
-│  │  │  ├ ConfirmationActivity.java
-│  │  │  ├ MyAppointmentsActivity.java
-│  │  │  ├ ProfileActivity.java
-│  │  │  └ ChangePasswordActivity.java
-│  │  ├─ adapters/
-│  │  ├─ models/
-│  │  ├─ utils/
-│  │  └ AppointmentManager.java
-│  └─ res/
-│     ├─ layout/
-│     ├─ drawable/
-│     ├─ values/
-│     ├─ menu/
-│     ├─ navigation/
-│     └─ xml/
-
 🛠️ **Технологии и зависимости**
 
   - Язык: Java (JVM 1.8), поддержка Kotlin
